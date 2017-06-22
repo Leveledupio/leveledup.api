@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/go-bootstrap/go-bootstrap/project-templates/postgresql/models"
 )
 
 var (

@@ -3,26 +3,24 @@ package main
 import (
 	"gopkg.in/gin-gonic/gin.v1"
 	//"github.com/strongjz/leveledup-api/model"
-	"github.com/spf13/viper"
-	"os"
-	"github.com/fsnotify/fsnotify"
 	"fmt"
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
 	"gopkg.in/op/go-logging.v1"
+	"os"
 	//"github.com/jmoiron/sqlx"
 )
-
 
 var (
 	log           = logging.MustGetLogger("gbs")
 	defaultFormat = "%{color}%{time:2006-01-02T15:04:05.000Z07:00} %{level:-5s} [%{shortfile}]%{color:reset} %{message}"
-	 ENV = "dev"
-
+	ENV           = "dev"
 )
 
-func init(){
+func init() {
 	log.Debugf("Init: Default ENV: %v", ENV)
 
-	if os.Getenv("ENV") != ""{
+	if os.Getenv("ENV") != "" {
 		ENV = os.Getenv("ENV")
 	}
 
@@ -31,7 +29,6 @@ func init(){
 }
 
 func newConfig() (*viper.Viper, error) {
-
 
 	configName := fmt.Sprintf("config/%v-config.yaml", ENV)
 
@@ -61,7 +58,6 @@ func newConfig() (*viper.Viper, error) {
 	return c, nil
 }
 
-
 func main() {
 
 	logBackend := logging.NewLogBackend(os.Stderr, "", 0)
@@ -77,14 +73,28 @@ func main() {
 		log.Fatal(err)
 	}
 
+	app, err := NewApplication(config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	log.Debugf("Config: %v", config)
 
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
+	log.Debug("App DSN: %s", app.dsn)
 
-		c.JSON(200, gin.H{
-			"message": "pong",
+	r := gin.Default()
+
+	group := r.Group("/v1")
+	{
+
+		group.POST("/login", LoginEndpoint)
+
+		group.GET("/ping", func(c *gin.Context) {
+
+			c.JSON(200, gin.H{
+				"message": "pong",
+			})
 		})
-	})
+	}
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
