@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gopkg.in/gin-gonic/gin.v1"
+	//"gopkg.in/gin-gonic/gin.v1"
 	//"github.com/strongjz/leveledup-api/model"
 	"fmt"
 	"github.com/fsnotify/fsnotify"
@@ -82,19 +82,6 @@ func main() {
 
 	log.Debug("App DSN: %s", app.dsn)
 
-	r := gin.Default()
-
-	group := r.Group("/v1")
-	{
-
-		group.POST("/login", LoginEndpoint)
-
-		group.GET("/ping", func(c *gin.Context) {
-
-			c.JSON(200, gin.H{
-				"message": "pong",
-			})
-		})
-	}
+	r := RouteSetup()
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
