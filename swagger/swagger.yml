@@ -1,0 +1,125 @@
+---
+swagger: '2.0'
+consumes:
+  - application/json
+definitions: {}
+info:
+  description: Swagger for Leveled up api
+  title: Leveledup API
+  version: 1.0.0
+paths: {}
+produces:
+  - application/json
+schemes:
+- http
+basePath: /v1
+paths:
+ /user/{username}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user name"
+      description: ""
+      operationId: "GetUserEP"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The email that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+    put:
+      tags:
+      - "user"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "UpdateUserEP"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        400:
+          description: "Invalid user supplied"
+        404:
+          description: "User not found"
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "DeleteUserEP"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+definitions:
+ User:
+   type: "object"
+   properties:
+    username:
+     type: "string"
+    email:
+     type: "string"
+    firstName:
+      type: "string"
+    lastName:
+      type: "string"
+    password:
+      type: "string"
+ Project:
+   type: "object"
+   properties:
+    Name:
+     type: "string"
+    Description:
+     type: "string"
+    Difficulty:
+     type: "string"
+ Team:
+   type: "object"
+   properties:
+    Name:
+     type: "string"
+    Description:
+     type: "string"
+    CreatedBy:
+     type: "string"
+ Account:
+  type: "object"
+  properties:
+    email:
+     type: "string"
+    BillingAddress:
+     type: "string"
+    ShippingAddress:
+     type: "string"

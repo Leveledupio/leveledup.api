@@ -12,11 +12,14 @@ import (
 )
 
 var (
-	log           = logging.MustGetLogger("gbs")
+	log = logging.MustGetLogger("gbs")
+
 	defaultFormat = "%{color}%{time:2006-01-02T15:04:05.000Z07:00} %{level:-5s} [%{shortfile}]%{color:reset} %{message}"
-	ENV           = "dev"
+	//ENV sets the environment so the right config is loaded
+	ENV = "dev"
 )
 
+//Init function sets the default env to dev
 func init() {
 	log.Debugf("Init: Default ENV: %v", ENV)
 
@@ -28,6 +31,8 @@ func init() {
 
 }
 
+//newConfig function parsers the config file for database connection etc
+//
 func newConfig() (*viper.Viper, error) {
 
 	configName := fmt.Sprintf("config/%v-config.yaml", ENV)
@@ -50,7 +55,7 @@ func newConfig() (*viper.Viper, error) {
 	err := c.ReadInConfig() // Find and read the config file
 	if err != nil {
 		// Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
 
 	c.Debug()
