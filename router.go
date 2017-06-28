@@ -1,23 +1,13 @@
 package main
 
 import (
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/sessions"
-	"github.com/jmoiron/sqlx"
+
 	"github.com/satori/go.uuid"
-	"github.com/spf13/viper"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
+	"github.com/strongjz/leveledup-api/handlers"
 )
 
-//Application - Struct the contains the Config, DSN for database, and the db structure
-//
-type Application struct {
-	config       *viper.Viper
-	dsn          string
-	db           *sqlx.DB
-	sessionStore sessions.Store
-}
 
 //RequestIDMiddleware - Sets the Request ID header for request tracking
 func RequestIDMiddleware() gin.HandlerFunc {
@@ -27,41 +17,15 @@ func RequestIDMiddleware() gin.HandlerFunc {
 	}
 }
 
-//NewApplication - Creates a new applications and populates information based on the config.
-//
-func NewApplication(config *viper.Viper) (*Application, error) {
-	dsn := config.Get("dsn").(string)
 
-	db, err := sqlx.Connect("mysql", dsn)
-	if err != nil {
-		log.Errorf("Connecting to Database: %v", err)
-		return nil, err
-	}
-
-	err = db.Ping()
-	if err != nil {
-		log.Errorf("Database ping failed: %v", err)
-		return nil, err
-	}
-
-	log.Info("Connected to Database")
-
-	cookieStoreSecret := config.Get("cookie_secret").(string)
-
-	app := &Application{}
-	app.config = config
-	app.dsn = dsn
-	app.db = db
-	app.sessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
-
-	return app, nil
-}
 
 //LoginEndpoint - Logs in a user
 //
 func LoginEndpoint(c *gin.Context) {
 
 	log.Debug("LoginEndpoint")
+
+	login, err := handlers.Login(app)
 
 	c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
 
@@ -145,6 +109,7 @@ func CreateTeamEP(c *gin.Context) {
 //
 func GetTeamEP(c *gin.Context) {
 	log.Debug("GetTeamEP")
+
 
 	c.JSON(http.StatusOK, gin.H{"status": "GetTeamEP"})
 
