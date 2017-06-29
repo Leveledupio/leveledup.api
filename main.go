@@ -2,10 +2,10 @@ package main
 
 import (
 	//"gopkg.in/gin-gonic/gin.v1"
-	"github.com/strongjz/leveledup-api/application"
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	app "github.com/strongjz/leveledup-api/application"
 	"gopkg.in/op/go-logging.v1"
 	"os"
 	//"github.com/jmoiron/sqlx"
@@ -78,15 +78,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	app, err := application.NewApplication(config)
+	a, err := app.NewApplication(config)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	log.Debugf("Config: %v", config)
 
-	log.Debug("App DSN: %s", app.Dsn)
+	log.Debug("App DSN: %s", a.DSN)
 
-	r := RouteSetup()
+	r := RouteSetup(a)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }

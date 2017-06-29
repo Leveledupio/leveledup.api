@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/spf13/viper"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/sessions"
 	"gopkg.in/op/go-logging.v1"
 )
@@ -18,7 +19,7 @@ var (
 //
 type Application struct {
 	Config       *viper.Viper
-	Dsn          string
+	DSN          string
 	DB 	*sqlx.DB
 	SessionStore sessions.Store
 }
@@ -47,7 +48,7 @@ func NewApplication(config *viper.Viper) (*Application, error) {
 
 	app := &Application{}
 	app.Config = config
-	app.Dsn = dsn
+	app.DSN = dsn
 	app.DB = db
 	app.SessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
 

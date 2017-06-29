@@ -1,13 +1,14 @@
 package main
 
 import (
-
 	"github.com/satori/go.uuid"
+	"github.com/strongjz/leveledup-api/handlers"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/strongjz/leveledup-api/application"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
-	"github.com/strongjz/leveledup-api/handlers"
 )
-
 
 //RequestIDMiddleware - Sets the Request ID header for request tracking
 func RequestIDMiddleware() gin.HandlerFunc {
@@ -17,15 +18,30 @@ func RequestIDMiddleware() gin.HandlerFunc {
 	}
 }
 
-
+func ApiMiddleware(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("databaseConn", db)
+		c.Next()
+	}
+}
 
 //LoginEndpoint - Logs in a user
 //
 func LoginEndpoint(c *gin.Context) {
 
-	log.Debug("LoginEndpoint")
+	log.Debug("LoginEndpoint for environment %s", ENV)
+	dbConn, ok := c.MustGet("databaseConn").(*sqlx.DB)
+	if !ok {
+		log.Errorf("Data Base connection could not be estashblished %v")
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "Error with your request"})
+	}
 
-	login, err := handlers.Login(app)
+	// do your thing here...
+	err := handlers.Login(dbConn)
+	if err != nil {
+		log.Errorf("Log in Error %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "Error with your request"})
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
 
@@ -110,19 +126,17 @@ func CreateTeamEP(c *gin.Context) {
 func GetTeamEP(c *gin.Context) {
 	log.Debug("GetTeamEP")
 
-
 	c.JSON(http.StatusOK, gin.H{"status": "GetTeamEP"})
 
 }
 
 // RouteSetup - Set the http routes for the api
 //
-func RouteSetup() *gin.Engine {
+func RouteSetup(a *application.Application) *gin.Engine {
 
 	r := gin.Default()
-
 	r.Use(RequestIDMiddleware())
-
+	r.Use(ApiMiddleware(a.DB))
 	group := r.Group("/v1")
 
 	{
