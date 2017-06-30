@@ -31,15 +31,15 @@ func NewUser(db *sqlx.DB) *User {
 }
 
 type UserRow struct {
-	UserID        int64  `db:"user_id"`
-	Email         string `db:"email"`
+	UserID        int64  `db:"user_id" json:"user_id"`
+	Email         string `db:"email" json:"email"`
 	Password      string `db:"password"`
 	PasswordAgain string
-	FirstName     string `db:"first_name"`
-	LastName      string `db:"last_name"`
-	GithubName    string `db:"github_name"`
-	SlackName     string `db:"slack_name"`
-	DateCustomer  string `db:"date_became_customer"`
+	FirstName     string `db:"first_name" json:"first_name"`
+	LastName      string `db:"last_name" json:"last_name"`
+	GithubName    string `db:"github_name" json:"github_name"`
+	SlackName     string `db:"slack_name" json:"slack_name"`
+	DateCustomer  string `db:"date_became_customer" json:"data_became_customer"`
 }
 
 func (u *User) PrintUser() string {

@@ -4,6 +4,7 @@ import (
 	"github.com/satori/go.uuid"
 	"github.com/strongjz/leveledup-api/handlers"
 
+	"errors"
 	"github.com/jmoiron/sqlx"
 	"github.com/strongjz/leveledup-api/application"
 	"gopkg.in/gin-gonic/gin.v1"
@@ -25,26 +26,15 @@ func ApiMiddleware(db *sqlx.DB) gin.HandlerFunc {
 	}
 }
 
-//LoginEndpoint - Logs in a user
-//
-func LoginEndpoint(c *gin.Context) {
+func RequestDB(c *gin.Context) (*sqlx.DB, error) {
 
-	log.Debug("LoginEndpoint for environment %s", ENV)
 	dbConn, ok := c.MustGet("databaseConn").(*sqlx.DB)
+
 	if !ok {
-		log.Errorf("Data Base connection could not be estashblished %v")
-		c.JSON(http.StatusInternalServerError, gin.H{"status": "Error with your request"})
+		return nil, errors.New("Can not retrive Database from context")
 	}
 
-	// do your thing here...
-	err := handlers.Login(dbConn)
-	if err != nil {
-		log.Errorf("Log in Error %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"status": "Error with your request"})
-	}
-
-	c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
-
+	return dbConn, nil
 }
 
 //SignupEndpoint - Creates a new user for leveledup
@@ -139,10 +129,12 @@ func RouteSetup(a *application.Application) *gin.Engine {
 	r.Use(ApiMiddleware(a.DB))
 	group := r.Group("/v1")
 
+	api := &handlers.ApiResource{DB: a.DB}
+
 	{
 
 		//User Actions
-		group.POST("/login", LoginEndpoint)
+		group.POST("/login", api.LoginEndpoint)
 
 		group.PUT("/user/:email", UpdateUserEP)
 		group.GET("/user/:email", GetUserEP)
