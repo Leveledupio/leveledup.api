@@ -8,6 +8,7 @@ import (
 	"errors"
 	"gopkg.in/gin-gonic/gin.v1"
 	"net/http"
+	//"io/ioutil"
 )
 
 var (
@@ -21,19 +22,27 @@ type ApiResource struct {
 
 func (h *ApiResource) LoginEndpoint (c *gin.Context)  {
 
+	//body, _ := ioutil.ReadAll(c.Request.Body)
+
+	//log.Debugf("Request body: %v", string(body))
 
 	log.Debugf("Handler Login")
 
-	user := model.User{}
+	user := model.NewUser(h.DB)
 
-	if c.Bind(&user) != nil {
+
+
+	err := c.Bind(&user.UserRow)
+	if err != nil {
+		log.Errorf("Problem decoding JSON body %s", err)
 		c.JSON(400, errors.New("problem decoding body"))
 		return
 	}
 
+	log.Debugf("User Loging: %s", user.Email)
+	log.Debugf("User Password: %s", user.Password)
 
-	u, err := user.GetUserByEmailAndPassword(h.DB, user.Email, user.Password)
-
+	u, err := user.GetUserByEmailAndPassword(nil, user.Email, user.Password)
 	if err != nil{
 
 		c.JSON(401, errors.New("Username and Password did not match"))
@@ -41,6 +50,9 @@ func (h *ApiResource) LoginEndpoint (c *gin.Context)  {
 	}
 
 
+	//zero out the password
+	u.Password = ""
+	u.PasswordAgain = ""
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, u)
 }

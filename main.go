@@ -1,14 +1,12 @@
 package main
 
 import (
-	//"gopkg.in/gin-gonic/gin.v1"
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	app "github.com/strongjz/leveledup-api/application"
 	"gopkg.in/op/go-logging.v1"
 	"os"
-	//"github.com/jmoiron/sqlx"
 )
 
 var (
@@ -84,9 +82,9 @@ func main() {
 	}
 
 	log.Debugf("Config: %v", config)
-
 	log.Debug("App DSN: %s", a.DSN)
 
 	r := RouteSetup(a)
+
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
