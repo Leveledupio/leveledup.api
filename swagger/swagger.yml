@@ -7,7 +7,6 @@ info:
   description: Swagger for Leveled up api
   title: Leveledup API
   version: 1.0.0
-paths: {}
 produces:
   - application/json
 schemes:
@@ -34,6 +33,13 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/User"
+          application/json:
+            user_id: 1
+            first_name: "Jeff"
+            last_name: "Black"
+            github_name: "jblack"
+            slack_name: "jblack"
+            date_became_customer: "2017-06-14"
         400:
           description: "Invalid username supplied"
         404:
