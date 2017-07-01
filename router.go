@@ -47,15 +47,6 @@ func SignupEndpoint(c *gin.Context) {
 
 }
 
-//GetUserEP - Returns user specified by email
-//
-func GetUserEP(c *gin.Context) {
-
-	log.Debug("SignupEndpoint")
-
-	c.JSON(http.StatusOK, gin.H{"status": "Sign up endpoint"})
-}
-
 //ProjectCreateEP - Creates a project with specificied attributes
 //
 func ProjectCreateEP(c *gin.Context) {
@@ -89,15 +80,6 @@ func DeleteProjectEP(c *gin.Context) {
 	log.Debug("DeleteProjectEP")
 
 	c.JSON(http.StatusOK, gin.H{"status": "DeleteProjectEP"})
-
-}
-
-// UpdateUserEP - Updates User's data
-//
-func UpdateUserEP(c *gin.Context) {
-	log.Debug("UpdateUserEP")
-
-	c.JSON(http.StatusOK, gin.H{"status": "UpdateUserEP"})
 
 }
 
@@ -136,8 +118,8 @@ func RouteSetup(a *application.Application) *gin.Engine {
 		//User Actions
 		group.POST("/login", api.LoginEndpoint)
 
-		group.PUT("/user/:email", UpdateUserEP)
-		group.GET("/user/:email", GetUserEP)
+		group.PUT("/user/:email", api.UpdateUserEP)
+		group.GET("/user/:email", api.GetUserEP)
 		group.DELETE("/user/:email", DeleteUserEP)
 
 		group.POST("/signup", SignupEndpoint)

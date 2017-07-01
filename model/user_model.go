@@ -190,3 +190,21 @@ func (u *User) UpdateEmailAndPasswordById(tx *sqlx.Tx, userId int64, email, pass
 
 	return u.GetUserById(tx, userId)
 }
+
+func (u *User) UpdateUser(tx *sqlx.Tx ) (*UserRow, error) {
+
+
+	data := make(map[string]interface{})
+	data[Email] = u.Email
+	data[FirstName] = u.FirstName
+	data[LastName] = u.LastName
+	data[GithubName] = u.GithubName
+	data[SlackName] = u.SlackName
+
+	sqlResult, err := u.InsertIntoTable(tx, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return u.userRowFromSqlResult(tx, sqlResult)
+}
