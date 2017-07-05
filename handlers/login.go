@@ -20,7 +20,7 @@ type ApiResource struct {
 }
 
 
-func (h *ApiResource) LoginEndpoint (c *gin.Context)  {
+func (h *ApiResource) UserLogin (c *gin.Context)  {
 
 	//body, _ := ioutil.ReadAll(c.Request.Body)
 

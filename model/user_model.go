@@ -6,6 +6,7 @@ import 	(
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
+	"net/mail"
 )
 
 var (
@@ -19,6 +20,7 @@ var (
 	SlackName = "slack_name"
 	DateCustomer = "date_became_customer"
 	UserTable = "user"
+
 )
 
 func NewUser(db *sqlx.DB) *User {
@@ -43,7 +45,7 @@ type UserRow struct {
 }
 
 func (u *User) PrintUser() string {
-	return fmt.Sprintf("Email: %s  First Name: %s Last Name %s Github: %s", u.Email, u.FirstName, u.LastName, u.GithubName)
+	return fmt.Sprintf("Email: '%s'  First Name: '%s' Last Name: '%s' Github: '%s'", u.Email, u.FirstName, u.LastName, u.GithubName)
 }
 
 type User struct {
@@ -76,11 +78,13 @@ func (u *User) AllUsers(tx *sqlx.Tx) ([]*UserRow, error) {
 func (u *User) GetUserById(tx *sqlx.Tx, id int64) (*UserRow, error) {
 	user := &UserRow{}
 	query := fmt.Sprintf("SELECT * FROM %v WHERE %v=?", u.table, u.tableID)
-	err := u.db.Get(user, query, id)
+	err := u.db.Get(u.UserRow, query, id)
 	if err != nil {
 		return nil, err
 	}
 
+	u.PasswordAgain = ""
+	u.Password = ""
 	return user, err
 }
 
@@ -92,7 +96,8 @@ func (u *User) GetByEmail(tx *sqlx.Tx, email string) (*UserRow, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	user.Password = ""
+	user.PasswordAgain = ""
 	return user, err
 }
 
@@ -110,6 +115,10 @@ func (u *User) GetUserByEmailAndPassword(tx *sqlx.Tx, email, password string) (*
 		return nil, err
 	}
 
+	//only the model needs access to the password, the controller does not
+	user.Password = ""
+	user.PasswordAgain = ""
+
 	return user, err
 }
 
@@ -121,6 +130,13 @@ func (u *User) Signup(tx *sqlx.Tx) (*UserRow, error) {
 	if u.Email == "" {
 		return nil, errors.New("Email cannot be blank.")
 	}
+
+	e, err := mail.ParseAddress(u.Email)
+	if err != nil {
+		return nil, errors.New("Email is invalid format")
+	}
+
+
 	if u.Password == "" {
 		return nil, errors.New("Password cannot be blank.")
 	}
@@ -148,7 +164,7 @@ func (u *User) Signup(tx *sqlx.Tx) (*UserRow, error) {
 	}
 
 	data := make(map[string]interface{})
-	data[Email] = u.Email
+	data[Email] = e.Address
 	data[Password] = hashedPassword
 	data[FirstName] = u.FirstName
 	data[LastName] = u.LastName

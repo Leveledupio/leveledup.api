@@ -6,6 +6,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/sessions"
 	"gopkg.in/op/go-logging.v1"
+
+	"errors"
 )
 
 var (
@@ -29,6 +31,10 @@ type Application struct {
 //
 func NewApplication(config *viper.Viper) (*Application, error) {
 	dsn := config.Get("dsn").(string)
+	if dsn == "" {
+		log.Errorf("No DSN in config file")
+		return nil, errors.New("No DSN in config file")
+	}
 
 	db, err := sqlx.Connect("mysql", dsn)
 	if err != nil {

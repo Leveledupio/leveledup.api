@@ -3,9 +3,15 @@ package main
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
+	"github.com/jmoiron/sqlx"
+	"github.com/satori/go.uuid"
 	"github.com/spf13/viper"
+	"github.com/strongjz/leveledup-api/application"
 	app "github.com/strongjz/leveledup-api/application"
+	"github.com/strongjz/leveledup-api/handlers"
+	"gopkg.in/gin-gonic/gin.v1"
 	"gopkg.in/op/go-logging.v1"
+
 	"os"
 )
 
@@ -27,6 +33,61 @@ func init() {
 
 	log.Debugf("Init: ENV Set: %v", ENV)
 
+}
+
+//RequestIDMiddleware - Sets the Request ID header for request tracking
+func RequestIDMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("X-Request-Id", uuid.NewV4().String())
+		c.Next()
+	}
+}
+
+func ApiMiddleware(db *sqlx.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("databaseConn", db)
+		c.Next()
+	}
+}
+
+// RouteSetup - Set the http routes for the api
+//
+func RouteSetup(a *application.Application) *gin.Engine {
+
+	r := gin.Default()
+	r.Use(RequestIDMiddleware())
+	r.Use(ApiMiddleware(a.DB))
+
+	api := &handlers.ApiResource{DB: a.DB}
+
+	//User Actions
+	r.POST("/user/login", api.UserLogin)
+	r.PUT("/user/:email", api.UserUpdate)
+	r.GET("/user/:email", api.UserRetrieve)
+	r.DELETE("/user/:email", api.UserDelete)
+	r.POST("/user/signup", api.UserSignup)
+
+	/*
+		//Project Actions
+		r.POST("/project", ProjectCreateEP)
+		r.GET("/project/:projectID", GetProjectEP)
+		r.DELETE("/project/:projectID", DeleteProjectEP)
+
+		//Team Actions
+		r.POST("/team", CreateTeamEP)
+		r.GET("/team/:teamID", GetTeamEP)
+
+		//Account Actions
+
+	*/
+	r.GET("/ping", func(c *gin.Context) {
+
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+
+	return r
 }
 
 //newConfig function parsers the config file for database connection etc
@@ -86,5 +147,11 @@ func main() {
 
 	r := RouteSetup(a)
 
-	r.Run() // listen and serve on 0.0.0.0:8080
+	port := config.Get("port").(string)
+	if port == "" {
+		log.Fatal("No DSN in config file")
+	}
+
+	address := fmt.Sprintf("0.0.0.0:%s", port)
+	r.Run(address) // listen and serve on 0.0.0.0:8080
 }
