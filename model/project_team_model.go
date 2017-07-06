@@ -9,11 +9,11 @@ import (
 
 //Database attributes
 var (
-	ProjectID = "project_id"
-	TeamID = "team_id"
-	ProjectURL = "project_url"
+	ProjectID     = "project_id"
+	TeamID        = "team_id"
+	ProjectURL    = "project_url"
 	ProjectTeamID = "project_team_id"
-	ProjectTable = "project_team"
+	ProjectTable  = "project_team"
 )
 
 func NewProjectTeam(db *sqlx.DB) *ProjectTeam {

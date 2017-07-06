@@ -1,10 +1,10 @@
 package application
 
 import (
-	"github.com/spf13/viper"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/sessions"
+	"github.com/jmoiron/sqlx"
+	"github.com/spf13/viper"
 	"gopkg.in/op/go-logging.v1"
 
 	"errors"
@@ -12,20 +12,16 @@ import (
 
 var (
 	log = logging.MustGetLogger("gbs")
-
-
 )
-
 
 //Application - Struct the contains the Config, DSN for database, and the db structure
 //
 type Application struct {
 	Config       *viper.Viper
 	DSN          string
-	DB 	*sqlx.DB
+	DB           *sqlx.DB
 	SessionStore sessions.Store
 }
-
 
 //NewApplication - Creates a new applications and populates information based on the config.
 //

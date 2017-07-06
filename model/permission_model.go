@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	PermissionID = "permission_id"
-	PermissionName = "permission_name"
-	PermissionRole = "permissions"
+	PermissionID    = "permission_id"
+	PermissionName  = "permission_name"
+	PermissionRole  = "permissions"
 	PermissionTable = "permission"
 )
 

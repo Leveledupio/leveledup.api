@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	CustAddID = "customer_address_id"
+	CustAddID    = "customer_address_id"
 	CustAddTable = "customer_addresses"
 )
 

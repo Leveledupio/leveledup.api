@@ -8,15 +8,15 @@ import (
 )
 
 var (
-	AddressID = "address_id"
-	Line1 = "line_1"
-	Line2 = "line_2"
-	Line3 = "line_3"
-	Line4 = "line_4"
-	City = "city"
-	Zip = "zip_or_post"
-	Country = "country"
-	State = "state"
+	AddressID    = "address_id"
+	Line1        = "line_1"
+	Line2        = "line_2"
+	Line3        = "line_3"
+	Line4        = "line_4"
+	City         = "city"
+	Zip          = "zip_or_post"
+	Country      = "country"
+	State        = "state"
 	AddressTable = "address"
 )
 

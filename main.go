@@ -64,7 +64,7 @@ func RouteSetup(a *application.Application) *gin.Engine {
 	r.POST("/user/login", api.UserLogin)
 	r.PUT("/user/:email", api.UserUpdate)
 	r.GET("/user/:email", api.UserRetrieve)
-	r.DELETE("/user/:email", api.UserDelete)
+	r.DELETE("/user", api.UserDelete)
 	r.POST("/user/signup", api.UserSignup)
 
 	/*

@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"gopkg.in/op/go-logging.v1"
+	"errors"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	model "github.com/strongjz/leveledup-api/model"
-	"errors"
 	"gopkg.in/gin-gonic/gin.v1"
+	"gopkg.in/op/go-logging.v1"
 	"net/http"
 	//"io/ioutil"
 )
@@ -19,8 +19,7 @@ type ApiResource struct {
 	DB *sqlx.DB
 }
 
-
-func (h *ApiResource) UserLogin (c *gin.Context)  {
+func (h *ApiResource) UserLogin(c *gin.Context) {
 
 	//body, _ := ioutil.ReadAll(c.Request.Body)
 
@@ -30,8 +29,6 @@ func (h *ApiResource) UserLogin (c *gin.Context)  {
 
 	user := model.NewUser(h.DB)
 
-
-
 	err := c.Bind(&user.UserRow)
 	if err != nil {
 		log.Errorf("Problem decoding JSON body %s", err)
@@ -39,16 +36,16 @@ func (h *ApiResource) UserLogin (c *gin.Context)  {
 		return
 	}
 
-	log.Debugf("User Loging: %s", user.Email)
-	log.Debugf("User Password: %s", user.Password)
+	log.Debugf("Handler Login User Email: %s", user.Email)
+	log.Debugf("Handler Login User Password: %s", user.Password)
 
 	u, err := user.GetUserByEmailAndPassword(nil, user.Email, user.Password)
-	if err != nil{
+	if err != nil {
 
-		c.JSON(401, errors.New("Username and Password did not match"))
+		error := "Username and Password did not match"
+		c.JSON(401, gin.H{"error": error})
 		return
 	}
-
 
 	//zero out the password
 	u.Password = ""

@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"gopkg.in/op/go-logging.v1"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"gopkg.in/op/go-logging.v1"
 
 	"strings"
 	"time"

@@ -8,10 +8,10 @@ import (
 )
 
 var (
-	AccountID = "account_id"
-	BillingAddress = "billing_address"
+	AccountID       = "account_id"
+	BillingAddress  = "billing_address"
 	ShippingAddress = "shipping_address"
-	AccountTable = "account"
+	AccountTable    = "account"
 )
 
 //new object

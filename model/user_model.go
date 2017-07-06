@@ -1,6 +1,6 @@
 package models
 
-import 	(
+import (
 	"database/sql"
 	"errors"
 	"fmt"
@@ -10,17 +10,16 @@ import 	(
 )
 
 var (
-	UserID = "user_id"
-	Email = "email"
-	Password = "password"
+	UserID        = "user_id"
+	Email         = "email"
+	Password      = "password"
 	PasswordAgain = "password"
-	FirstName = "first_name"
-	LastName = "last_name"
-	GithubName = "github_name"
-	SlackName = "slack_name"
-	DateCustomer = "date_became_customer"
-	UserTable = "user"
-
+	FirstName     = "first_name"
+	LastName      = "last_name"
+	GithubName    = "github_name"
+	SlackName     = "slack_name"
+	DateCustomer  = "date_became_customer"
+	UserTable     = "user"
 )
 
 func NewUser(db *sqlx.DB) *User {
@@ -96,8 +95,7 @@ func (u *User) GetByEmail(tx *sqlx.Tx, email string) (*UserRow, error) {
 	if err != nil {
 		return nil, err
 	}
-	user.Password = ""
-	user.PasswordAgain = ""
+
 	return user, err
 }
 
@@ -110,8 +108,11 @@ func (u *User) GetUserByEmailAndPassword(tx *sqlx.Tx, email, password string) (*
 		return nil, err
 	}
 
+	log.Debugf("Model GetUserByEmailAndPassword Email: %s USERID: %d", user.Email, user.UserID)
+
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
+		log.Debugf("Model GetUserByEmailAndPassword email: %s bcrypt error: %s", email, err)
 		return nil, err
 	}
 
@@ -120,6 +121,26 @@ func (u *User) GetUserByEmailAndPassword(tx *sqlx.Tx, email, password string) (*
 	user.PasswordAgain = ""
 
 	return user, err
+}
+
+func (u *User) DeleteUser(tx *sqlx.Tx, email, password string) error {
+
+	log.Debugf("Model DeleteUser Email: %s", email)
+	user, err := u.GetUserByEmailAndPassword(tx, email, password)
+
+	if err != nil {
+		log.Debugf("Error retreiving GetUserByEmailAndPassword %s", err)
+		return err
+	}
+
+	_, err = u.DeleteById(nil, user.UserID)
+	if err != nil {
+		log.Debugf("Error DeleteById %s", err)
+		return err
+	}
+
+	return nil
+
 }
 
 // Signup create a new record of user.
@@ -135,7 +156,6 @@ func (u *User) Signup(tx *sqlx.Tx) (*UserRow, error) {
 	if err != nil {
 		return nil, errors.New("Email is invalid format")
 	}
-
 
 	if u.Password == "" {
 		return nil, errors.New("Password cannot be blank.")
@@ -207,8 +227,7 @@ func (u *User) UpdateEmailAndPasswordById(tx *sqlx.Tx, userId int64, email, pass
 	return u.GetUserById(tx, userId)
 }
 
-func (u *User) UpdateUser(tx *sqlx.Tx ) (*UserRow, error) {
-
+func (u *User) UpdateUser(tx *sqlx.Tx) (*UserRow, error) {
 
 	data := make(map[string]interface{})
 	data[Email] = u.Email

@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	AddressTypeID = "address_type_code"
-	AddressDesc = "address_description"
-	AddressName = "name"
+	AddressTypeID    = "address_type_code"
+	AddressDesc      = "address_description"
+	AddressName      = "name"
 	AddressTypeTable = "ref_address_type"
 )
 

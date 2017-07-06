@@ -5,12 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
-
 )
 
 var (
 	UserPermissionTable = "user_permission"
-	UserPermID = "user_permission_id"
+	UserPermID          = "user_permission_id"
 )
 
 func NewUserPermission(db *sqlx.DB) *UserPermission {

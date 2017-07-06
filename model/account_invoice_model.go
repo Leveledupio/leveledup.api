@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	InvoiceID = "invoice_id"
+	InvoiceID       = "invoice_id"
 	AccountINVTable = "account_invoice"
 )
 
