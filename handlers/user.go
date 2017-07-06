@@ -86,11 +86,6 @@ func (h *ApiResource) UserRetrieve(c *gin.Context) {
 	c.JSON(http.StatusOK, u)
 }
 
-func (h *ApiResource) GetUserEP(c *gin.Context) {
-
-	c.JSON(http.StatusOK, gin.H{"status": "ok"})
-}
-
 func (h *ApiResource) UserDelete(c *gin.Context) {
 	log.Debugf("Handler UserSignup")
 

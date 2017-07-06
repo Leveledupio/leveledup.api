@@ -80,10 +80,23 @@ func RouteSetup(a *application.Application) *gin.Engine {
 		//Account Actions
 
 	*/
-	r.GET("/ping", func(c *gin.Context) {
+	r.GET("/health", func(c *gin.Context) {
+
+		err := a.DB.Ping()
+		if err != nil {
+			e := fmt.Sprintf("Database health ping failed: %v", err)
+			log.Error(e)
+			c.JSON(500, gin.H{
+				"error": e,
+			})
+			c.Abort()
+			return
+		}
+
+		log.Info("Connected to Database")
 
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message": "Connected!",
 		})
 	})
 
