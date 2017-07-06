@@ -68,6 +68,7 @@ func RouteSetup(a *application.Application) *gin.Engine {
 	r.POST("/user/signup", api.UserSignup)
 
 	/*
+
 		//Project Actions
 		r.POST("/project", ProjectCreateEP)
 		r.GET("/project/:projectID", GetProjectEP)
@@ -80,6 +81,7 @@ func RouteSetup(a *application.Application) *gin.Engine {
 		//Account Actions
 
 	*/
+
 	r.GET("/health", func(c *gin.Context) {
 
 		err := a.DB.Ping()
