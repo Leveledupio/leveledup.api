@@ -34,7 +34,7 @@ func (h *ApiResource) UserUpdate(c *gin.Context) {
 
 	err := c.Bind(&user.UserRow)
 	if err != nil {
-		//	log.Errorf("Problem decoding JSON body %s", err)
+		log.Errorf("Problem decoding JSON body %s", err)
 		c.JSON(400, errors.New("problem decoding body"))
 		return
 	}
@@ -98,7 +98,7 @@ func (h *ApiResource) UserDelete(c *gin.Context) {
 	log.Debugf("User Data print after c.Bind %s", user.PrintUser())
 
 	if err != nil {
-		//	log.Errorf("Problem decoding JSON body %s", err)
+		log.Errorf("Problem decoding JSON body %s", err)
 		c.JSON(400, errors.New("problem decoding body"))
 		return
 	}

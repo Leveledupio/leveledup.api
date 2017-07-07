@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	log = logging.MustGetLogger("gbs")
+	log = logging.MustGetLogger("main")
 
 	defaultFormat = "%{color}%{time:2006-01-02T15:04:05.000Z07:00} %{level:-5s} [%{shortfile}]%{color:reset} %{message}"
 	//ENV sets the environment so the right config is loaded
@@ -30,6 +30,7 @@ func init() {
 	if os.Getenv("ENV") != "" {
 		ENV = os.Getenv("ENV")
 	}
+	logging.SetLevel(logging.INFO, "main")
 
 	log.Debugf("Init: ENV Set: %v", ENV)
 
@@ -99,7 +100,7 @@ func RouteSetup(a *application.Application) *gin.Engine {
 			return
 		}
 
-		log.Info("Connected to Database")
+		log.Debug("Connected to Database")
 
 		c.JSON(200, gin.H{
 			"message": "Connected!",
@@ -133,7 +134,8 @@ func newConfig() (*viper.Viper, error) {
 	err := c.ReadInConfig() // Find and read the config file
 	if err != nil {
 		// Handle errors reading the config file
-		panic(fmt.Errorf("fatal error config file: %s", err))
+		log.Panicf("fatal error config file: %s", err)
+
 	}
 
 	c.Debug()
@@ -151,6 +153,8 @@ func main() {
 		),
 	)
 
+	logging.SetLevel(logging.DEBUG, "")
+
 	config, err := newConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -162,13 +166,13 @@ func main() {
 	}
 
 	log.Debugf("Config: %v", config)
-	log.Debug("App DSN: %s", a.DSN)
+	log.Debugf("App DSN: %s", a.DSN)
 
 	r := RouteSetup(a)
 
 	port := config.Get("port").(string)
 	if port == "" {
-		log.Fatal("No DSN in config file")
+		log.Fatal("No Port in config file")
 	}
 
 	address := fmt.Sprintf("0.0.0.0:%s", port)
