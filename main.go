@@ -9,9 +9,9 @@ import (
 	"github.com/strongjz/leveledup-api/application"
 	app "github.com/strongjz/leveledup-api/application"
 	"github.com/strongjz/leveledup-api/handlers"
-	"gopkg.in/gin-gonic/gin.v1"
+	"github.com/gin-gonic/gin"
 	"gopkg.in/op/go-logging.v1"
-
+	"github.com/gin-contrib/cors"
 	"os"
 )
 
@@ -57,6 +57,10 @@ func RouteSetup(a *application.Application) *gin.Engine {
 	r := gin.Default()
 	r.Use(RequestIDMiddleware())
 	r.Use(ApiMiddleware(a.DB))
+
+	cors_config := cors.DefaultConfig()
+	cors_config.AllowAllOrigins = true
+	r.Use(cors.New(cors_config))
 
 	api := &handlers.ApiResource{DB: a.DB}
 
@@ -168,5 +172,8 @@ func main() {
 	}
 
 	address := fmt.Sprintf("0.0.0.0:%s", port)
+
+
+
 	r.Run(address) // listen and serve on 0.0.0.0:8080
 }

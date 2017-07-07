@@ -6,8 +6,9 @@ import (
 
 	"errors"
 	model "github.com/strongjz/leveledup-api/model"
-	"gopkg.in/gin-gonic/gin.v1"
+	"github.com/gin-gonic/gin"
 	"net/http"
+
 )
 
 var (
@@ -91,7 +92,11 @@ func (h *ApiResource) UserDelete(c *gin.Context) {
 
 	user := model.NewUser(h.DB)
 
+
 	err := c.Bind(&user.UserRow)
+
+	log.Debugf("User Data print after c.Bind %s", user.PrintUser())
+
 	if err != nil {
 		//	log.Errorf("Problem decoding JSON body %s", err)
 		c.JSON(400, errors.New("problem decoding body"))
@@ -103,7 +108,13 @@ func (h *ApiResource) UserDelete(c *gin.Context) {
 	err = user.DeleteUser(nil, user.Email, user.Password)
 	if err != nil {
 		log.Errorf("Error deleting user %s err %s", user.Email, err)
-		c.JSON(500, errors.New("Deleting user email"))
+
+		if err.Error() == "sql: no rows in result set" {
+			c.JSON(404, errors.New("User does not exist"))
+			return
+		}
+
+		c.JSON(400, errors.New("Deleting user email"))
 		return
 	}
 
@@ -118,17 +129,21 @@ func (h *ApiResource) UserSignup(c *gin.Context) {
 
 	err := c.Bind(&user.UserRow)
 	if err != nil {
-		//	log.Errorf("Problem decoding JSON body %s", err)
+		log.Errorf("Problem decoding JSON body %s", err)
 		c.JSON(400, errors.New("problem decoding body"))
 		return
 	}
+
+	log.Debugf("User Data print after c.Bind %s", user.PrintUser())
 
 	log.Debugf(user.PrintUser())
 
 	u, err := user.Signup(nil)
 	if err != nil {
 
-		c.JSON(500, errors.New("Error Signing up user"))
+		log.Debugf("Erroring signing up user %s", err)
+
+		c.JSON(400, errors.New("Error Signing up user"))
 		return
 	}
 

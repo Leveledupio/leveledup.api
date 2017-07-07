@@ -126,12 +126,13 @@ func (u *User) GetUserByEmailAndPassword(tx *sqlx.Tx, email, password string) (*
 func (u *User) DeleteUser(tx *sqlx.Tx, email, password string) error {
 
 	log.Debugf("Model DeleteUser Email: %s", email)
-	user, err := u.GetUserByEmailAndPassword(tx, email, password)
 
+	user, err := u.GetUserByEmailAndPassword(tx, email, password)
 	if err != nil {
 		log.Debugf("Error retreiving GetUserByEmailAndPassword %s", err)
 		return err
 	}
+	log.Debugf("Model Deleting Retrieving user Email: %s ID: %v", user.Email, user.UserID)
 
 	_, err = u.DeleteById(nil, user.UserID)
 	if err != nil {
