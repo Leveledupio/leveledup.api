@@ -116,20 +116,20 @@ func newConfig() (*viper.Viper, error) {
 
 	configName := fmt.Sprintf("config/%v-config.yaml", ENV)
 
+	pwd, _ := os.Getwd()
+	log.Debugf("Current working dir %s", pwd)
 	log.Debugf("Loading Config file %v", configName)
 
 	c := viper.New()
-	c.AddConfigPath(".")
 	c.SetConfigFile(configName)
 	c.SetConfigType("yaml")
-	//c.Debug()
 	c.WatchConfig()
+	c.Debug()
 
 	c.OnConfigChange(func(e fsnotify.Event) {
 		log.Infof("Config file changed:", e.Name)
 	})
 
-	c.AutomaticEnv()
 
 	err := c.ReadInConfig() // Find and read the config file
 	if err != nil {

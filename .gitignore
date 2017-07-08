@@ -3,13 +3,14 @@
 *.dll
 *.so
 *.dylib
-
+vendor/
 config/*
 .idea/*
-
+*.lock
+*.toml
 # Test binary, build with `go test -c`
 *.test
-
+lvl-api
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
