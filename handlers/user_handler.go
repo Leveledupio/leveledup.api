@@ -5,7 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
-	model "github.com/strongjz/leveledup-api/model"
+	"github.com/strongjz/leveledup-api/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 
@@ -28,7 +28,7 @@ func (h *ApiResource) UserUpdate(c *gin.Context) {
 
 	log.Debugf("Handler UserUpdate")
 
-	user := model.NewUser(h.DB)
+	user := models.NewUser(h.DB)
 
 	email := c.Param("email")
 
@@ -62,7 +62,7 @@ func (h *ApiResource) UserRetrieve(c *gin.Context) {
 
 	log.Debugf("Handler UserRetrieve")
 
-	user := model.NewUser(h.DB)
+	user := models.NewUser(h.DB)
 
 	email := c.Param("email")
 
@@ -90,7 +90,7 @@ func (h *ApiResource) UserRetrieve(c *gin.Context) {
 func (h *ApiResource) UserDelete(c *gin.Context) {
 	log.Debugf("Handler UserSignup")
 
-	user := model.NewUser(h.DB)
+	user := models.NewUser(h.DB)
 
 
 	err := c.Bind(&user.UserRow)
@@ -125,7 +125,7 @@ func (h *ApiResource) UserSignup(c *gin.Context) {
 
 	log.Debugf("Handler UserSignup")
 
-	user := model.NewUser(h.DB)
+	user := models.NewUser(h.DB)
 
 	err := c.Bind(&user.UserRow)
 	if err != nil {
@@ -135,7 +135,7 @@ func (h *ApiResource) UserSignup(c *gin.Context) {
 	}
 
 	log.Debugf("User Data print after c.Bind %s", user.PrintUser())
-	u := &model.UserRow{}
+	u := &models.UserRow{}
 
 	u, err = user.Signup(nil)
 

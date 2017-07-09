@@ -36,6 +36,7 @@ func TestNewUserPermission(t *testing.T) {
 		t.Fatalf("Creating a User permission should not fail %v", err)
 	}
 
+	t.Log("TestNewUserPermission : Deleting User %v ID %v", user.Email, user.UserID)
 	_, err = user.DeleteById(nil, user.UserID)
 	if err != nil {
 		t.Fatalf("Deleting a User should not fail %v", err)
@@ -45,6 +46,7 @@ func TestNewUserPermission(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Deleting a Permission should not fail %v", err)
 	}
+
 
 	_, err = user_permission.DeleteById(nil, user_permission.PermissionID)
 	if err != nil {

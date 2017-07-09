@@ -4,7 +4,7 @@ import (
 	"errors"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	model "github.com/strongjz/leveledup-api/model"
+	"github.com/strongjz/leveledup-api/models"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/op/go-logging.v1"
 	"net/http"
@@ -43,7 +43,7 @@ func (h *ApiResource) UserLogin(c *gin.Context) {
 
 	log.Debugf("Handler Login")
 
-	user := model.NewUser(h.DB)
+	user := models.NewUser(h.DB)
 
 	err := c.Bind(&user.UserRow)
 	if err != nil {

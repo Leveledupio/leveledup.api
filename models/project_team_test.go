@@ -79,6 +79,9 @@ func TestProjectTeam_CreateProjectTeam(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Project Team: Deleting team by id should not fail. Error: %v", err)
 	}
+
+	t.Log("TestProjectTeam_CreateProjectTeam: Deleting User %v ID %v", user.Email, user.UserID)
+
 	_, err = user.DeleteById(nil, user.UserID)
 	if err != nil {
 		t.Fatalf("Project Team: Deleting user by id should not fail. Error: %v", err)

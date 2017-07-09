@@ -1,6 +1,7 @@
 package models
 
 import (
+	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -92,13 +93,11 @@ func (up *UserPermission) userPermissionRowFromSqlResult(tx *sqlx.Tx, sqlResult 
 // GetById returns record by id.
 func (up *UserPermission) GetUserPermissionById(tx *sqlx.Tx, permissionId int64) error {
 
-	//log.Print("[DEBUG][USER_PERMISSION]) GetUserPermissionById")
 
 	userPermissionRow := &UserPermissionRow{}
 
 	query := fmt.Sprintf("SELECT * FROM %v WHERE %v=?", up.table, UserPermID)
 
-	log.Debugf("[DEBUG][USER_PERMISSION]) QUERY %v", query)
 	err := up.db.Get(userPermissionRow, query, permissionId)
 	if err != nil {
 		log.Errorf("[ERROR][USER_PERMISSION] Error retrieving %v from Database %v", permissionId, err)
@@ -111,7 +110,3 @@ func (up *UserPermission) GetUserPermissionById(tx *sqlx.Tx, permissionId int64)
 
 	return nil
 }
-
-//Update
-
-//Delete

@@ -5,11 +5,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/strongjz/gbs/libstring"
-	//"os"
-	//"github.com/spf13/viper"
-
-	//"strings"
-
 	"testing"
 )
 
@@ -95,9 +90,9 @@ func TestCreateDeleteGeneric(t *testing.T) {
 	data := make(map[string]interface{})
 	data["email"] = newEmailForTest()
 	data["password"] = "abc123"
-	data["first_name"] = "joe"
+	data["first_name"] = "Jeff"
 	data["last_name"] = "smith"
-	data["github_name"] = "jsmith"
+	data["github_name"] = "TestCreateDeleteGeneric"
 
 	result, err := base.InsertIntoTable(nil, data)
 	if err != nil {
@@ -125,10 +120,11 @@ func TestCreateDeleteById(t *testing.T) {
 
 	data := make(map[string]interface{})
 	data["email"] = newEmailForTest()
-	data["password"] = "abc123"
+	data["password"] = "TestCreateDeleteById"
 	data["first_name"] = "joe"
 	data["last_name"] = "smith"
-	data["github_name"] = "jsmith"
+	data["github_name"] = "TestCreateDeleteById"
+	data["date_became_customer"] = base.todayDate()
 
 	result, err := base.InsertIntoTable(nil, data)
 	if err != nil {
@@ -141,10 +137,12 @@ func TestCreateDeleteById(t *testing.T) {
 	}
 
 	// DELETE WHERE id=...
+	t.Logf("TestCreateDeleteById Deleting id %v", lastInsertedId)
 	_, err = base.DeleteById(nil, lastInsertedId)
 	if err != nil {
 		t.Fatalf("Deleting user by id should not fail. Error: %v", err)
 	}
+
 
 }
 
@@ -159,7 +157,7 @@ func TestCreateUpdateGenericDelete(t *testing.T) {
 	data["password"] = "abc123"
 	data["first_name"] = "joe"
 	data["last_name"] = "smith"
-	data["github_name"] = "jsmith"
+	data["github_name"] = "TestCreateUpdateGenericDelete"
 	data["date_became_customer"] = base.todayDate()
 
 	result, err := base.InsertIntoTable(nil, data)
@@ -182,6 +180,7 @@ func TestCreateUpdateGenericDelete(t *testing.T) {
 	}
 
 	// DELETE WHERE id=...
+	t.Logf("TestCreateUpdateGenericDelete Deleting id %v", lastInsertedId)
 	_, err = base.DeleteById(nil, lastInsertedId)
 	if err != nil {
 		t.Fatalf("Deleting row by id should not fail. Error: %v", err)
@@ -200,7 +199,7 @@ func TestCreateUpdateByIDDelete(t *testing.T) {
 	data["password"] = "abc123"
 	data["first_name"] = "joe"
 	data["last_name"] = "smith"
-	data["github_name"] = "jsmith"
+	data["github_name"] = "TestCreateUpdateByIDDelete"
 	data["date_became_customer"] = base.todayDate()
 
 	result, err := base.InsertIntoTable(nil, data)
@@ -222,6 +221,7 @@ func TestCreateUpdateByIDDelete(t *testing.T) {
 	}
 
 	// DELETE WHERE id=...
+	t.Logf("TestCreateUpdateByIDDelete Deleting id %v", lastInsertedId)
 	_, err = base.DeleteById(nil, lastInsertedId)
 	if err != nil {
 		t.Fatalf("Deleting row by id should not fail. Error: %v", err)
@@ -242,7 +242,7 @@ func TestCreateUpdateByKeyValueStringDelete(t *testing.T) {
 	data["password"] = "abc123"
 	data["first_name"] = "joe"
 	data["last_name"] = "smith"
-	data["github_name"] = "jsmith"
+	data["github_name"] = "TestCreateUpdateByKeyValueStringDelete"
 	data["date_became_customer"] = base.todayDate()
 
 	result, err := base.InsertIntoTable(nil, data)
@@ -264,6 +264,7 @@ func TestCreateUpdateByKeyValueStringDelete(t *testing.T) {
 	}
 
 	// DELETE FROM user WHERE id=...
+	t.Logf("TestCreateUpdateByKeyValueStringDelete Deleting id %v", lastInsertedId)
 	_, err = base.DeleteById(nil, lastInsertedId)
 	if err != nil {
 		t.Fatalf("Deleting user by id should not fail. Error: %v", err)

@@ -56,8 +56,6 @@ func (b *Base) InsertIntoTable(tx *sqlx.Tx, data map[string]interface{}) (sql.Re
 		return nil, errors.New("Table must not be empty.")
 	}
 
-	//log.Infof("[DEBUG][BASE.INSERTINTOTABLE] DATA %v", data)
-
 	tx, wrapInSingleTransaction, err := b.newTransactionIfNeeded(tx)
 	if tx == nil {
 		return nil, errors.New("Transaction struct must not be empty.")
@@ -82,11 +80,9 @@ func (b *Base) InsertIntoTable(tx *sqlx.Tx, data map[string]interface{}) (sql.Re
 		strings.Join(keys, ","),
 		strings.Join(qMarks, ","))
 
-	//log.Infof("[DEBUG][BASE.INSERTINTOTABLE] Query: %v", query)
-
 	result, err := tx.Exec(query, values...)
 	if err != nil {
-		log.Infof("[ERROR][BASE.INSERTINTOTABLE] %v", err)
+		log.Errorf("[ERROR][BASE.INSERTINTOTABLE] %v", err)
 		return nil, err
 	}
 
@@ -274,6 +270,8 @@ func (b *Base) DeleteFromTable(tx *sqlx.Tx, where string) (sql.Result, error) {
 }
 
 func (b *Base) DeleteById(tx *sqlx.Tx, id int64) (sql.Result, error) {
+
+	log.Debugf("DeleteById: Deleting ID from database %v", id)
 	var result sql.Result
 
 	if b.table == "" {
@@ -290,7 +288,6 @@ func (b *Base) DeleteById(tx *sqlx.Tx, id int64) (sql.Result, error) {
 
 	query := fmt.Sprintf("DELETE FROM %v WHERE %v=?", b.table, b.tableID)
 
-	//log.Infof("Delete Query: %v \n with id %v", query, b.tableID)
 	result, err = tx.Exec(query, id)
 
 	if wrapInSingleTransaction == true {

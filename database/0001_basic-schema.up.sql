@@ -92,7 +92,7 @@ CREATE TABLE `address` (
     INDEX (user_id),
      INDEX (country),
       INDEX (state),
-   CONSTRAINT `fk_user_id` FOREIGN KEY (user_id) REFERENCES user (user_id) ON UPDATE CASCADE
+   CONSTRAINT `fk_user_id` FOREIGN KEY (user_id) REFERENCES user (user_id)
 ) ENGINE=INNODB;
 
 CREATE TABLE `customer_addresses` (

@@ -15,7 +15,7 @@ func NewCustAddressTest(t *testing.T) *CustomerAdd {
 }
 
 func TestNewAddress(t *testing.T) {
-	t.Log("Address: Testing creating a new address\n")
+	t.Log("Address: Testing creating a new address")
 
 	address := NewAddressTest(t)
 
@@ -69,6 +69,10 @@ func TestNewAddress(t *testing.T) {
 	_, err = cust_address.DeleteById(nil, cust_address.CustAddID)
 	if err != nil {
 		t.Fatalf("Deleting Customer address by id should not fail. Error: %v", err)
+	}
+	_, err = user.DeleteById(nil, user.UserID)
+	if err != nil {
+		t.Fatalf("Deleting user by id should not fail. Error: %v", err)
 	}
 
 }
