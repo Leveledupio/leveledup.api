@@ -1,6 +1,7 @@
 package models
 
 import (
+	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -53,10 +54,13 @@ type User struct {
 }
 
 func (u *User) userRowFromSqlResult(tx *sqlx.Tx, sqlResult sql.Result) (*UserRow, error) {
+
 	userId, err := sqlResult.LastInsertId()
 	if err != nil {
 		return nil, err
 	}
+
+	log.Debugf("userRowFromSqlResult SQL Result User ID %v", userId)
 
 	return u.GetUserById(tx, userId)
 }
@@ -75,9 +79,13 @@ func (u *User) AllUsers(tx *sqlx.Tx) ([]*UserRow, error) {
 
 // GetById returns record by id.
 func (u *User) GetUserById(tx *sqlx.Tx, id int64) (*UserRow, error) {
+
 	user := &UserRow{}
+
 	query := fmt.Sprintf("SELECT * FROM %v WHERE %v=?", u.table, u.tableID)
-	err := u.db.Get(u.UserRow, query, id)
+
+	err := u.db.Get(user, query, id)
+
 	if err != nil {
 		return nil, err
 	}
@@ -195,6 +203,7 @@ func (u *User) Signup(tx *sqlx.Tx) (*UserRow, error) {
 
 	sqlResult, err := u.InsertIntoTable(tx, data)
 	if err != nil {
+		log.Errorf("Handler User Signup Error after insert into table %v", err)
 		return nil, err
 	}
 

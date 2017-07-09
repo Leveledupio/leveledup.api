@@ -46,7 +46,7 @@ func (b *Base) newTransactionIfNeeded(tx *sqlx.Tx) (*sqlx.Tx, bool, error) {
 		return nil, wrapInSingleTransaction, err
 	}
 
-	log.Infof("[DEBUG][BASE.NewTransaction] %v", tx)
+	//log.Infof("[DEBUG][BASE.NewTransaction] %v", tx)
 	return tx, wrapInSingleTransaction, nil
 
 }
@@ -56,7 +56,7 @@ func (b *Base) InsertIntoTable(tx *sqlx.Tx, data map[string]interface{}) (sql.Re
 		return nil, errors.New("Table must not be empty.")
 	}
 
-	log.Infof("[DEBUG][BASE.INSERTINTOTABLE] DATA %v", data)
+	//log.Infof("[DEBUG][BASE.INSERTINTOTABLE] DATA %v", data)
 
 	tx, wrapInSingleTransaction, err := b.newTransactionIfNeeded(tx)
 	if tx == nil {

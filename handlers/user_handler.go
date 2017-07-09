@@ -135,14 +135,13 @@ func (h *ApiResource) UserSignup(c *gin.Context) {
 	}
 
 	log.Debugf("User Data print after c.Bind %s", user.PrintUser())
+	u := &model.UserRow{}
 
-	log.Debugf(user.PrintUser())
+	u, err = user.Signup(nil)
 
-	u, err := user.Signup(nil)
 	if err != nil {
 
-		log.Debugf("Erroring signing up user %s", err)
-
+		log.Debugf("Erroring signing up ERROR %s", err)
 		c.JSON(400, errors.New("Error Signing up user"))
 		return
 	}
