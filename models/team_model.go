@@ -78,6 +78,3 @@ func (t *Team) GetTeamById(tx *sqlx.Tx, id int64) (*TeamRow, error) {
 }
 
 //Update
-
-//Delete
-//Delete from id is in base
