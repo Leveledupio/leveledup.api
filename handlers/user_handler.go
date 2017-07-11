@@ -1,28 +1,44 @@
 package handlers
 
 import (
-	//log "gopkg.in/op/go-logging.v1"
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
 	"github.com/strongjz/leveledup-api/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
-
 )
 
-var (
-	UserID        = "user_id"
-	Email         = "email"
-	Password      = "password"
-	PasswordAgain = "password"
-	FirstName     = "first_name"
-	LastName      = "last_name"
-	GithubName    = "github_name"
-	SlackName     = "slack_name"
-	DateCustomer  = "date_became_customer"
-	UserTable     = "user"
-)
+func (h *ApiResource) UserLogin(c *gin.Context) {
+
+	log.Debugf("Handler Login")
+
+	user := models.NewUser(h.DB)
+
+	err := c.Bind(&user.UserRow)
+	if err != nil {
+		log.Errorf("Problem decoding JSON body %s", err)
+		c.JSON(400, errors.New("problem decoding body"))
+		return
+	}
+
+	log.Debugf("Handler Login User Email: %s", user.Email)
+	log.Debugf("Handler Login User Password: %s", user.Password)
+
+	u, err := user.GetUserByEmailAndPassword(nil, user.Email, user.Password)
+	if err != nil {
+		log.Errorf("Username and Password did not match %s", err)
+		error := "Username and Password did not match"
+		c.JSON(401, gin.H{"error": error})
+		return
+	}
+
+	//zero out the password
+	u.Password = ""
+	u.PasswordAgain = ""
+
+	c.JSON(http.StatusOK, u)
+}
 
 func (h *ApiResource) UserUpdate(c *gin.Context) {
 

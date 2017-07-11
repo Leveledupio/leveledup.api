@@ -9,7 +9,6 @@ import (
 	"github.com/satori/go.uuid"
 	"github.com/spf13/viper"
 	"github.com/strongjz/leveledup-api/application"
-	app "github.com/strongjz/leveledup-api/application"
 	"github.com/strongjz/leveledup-api/handlers"
 	"gopkg.in/op/go-logging.v1"
 	"os"
@@ -20,9 +19,10 @@ type Api struct {
 }
 
 var (
-	log = logging.MustGetLogger("main")
+	log = logging.MustGetLogger("api")
 
 	defaultFormat = "%{color}%{time:2006-01-02T15:04:05.000Z07:00} %{level:-5s} [%{shortfile}]%{color:reset} %{message}"
+
 	//ENV sets the environment so the right config is loaded
 	ENV = "dev"
 )
@@ -76,20 +76,19 @@ func RouteSetup(a *application.Application) *gin.Engine {
 	r.DELETE("/user", api.UserDelete)
 	r.POST("/user/signup", api.UserSignup)
 
-	/*
+	//Team Actions
+	r.POST("/team", api.TeamCreate)
+	r.GET("/team/:teamID", api.TeamGet)
+	r.PUT("/team/:teamID", api.TeamUpdate)
+	r.DELETE("/team/:teamID", api.TeamDelete)
 
-		//Project Actions
-		r.POST("/project", ProjectCreateEP)
-		r.GET("/project/:projectID", GetProjectEP)
-		r.DELETE("/project/:projectID", DeleteProjectEP)
 
-		//Team Actions
-		r.POST("/team", CreateTeamEP)
-		r.GET("/team/:teamID", GetTeamEP)
+	//Project Actions
+	r.POST("/project", api.ProjectCreate)
+	r.GET("/project/:projectID", api.ProjectGet)
+	r.PUT("/project/:projectID", api.ProjectUpdate)
+	r.DELETE("/project/:projectID", api.ProjectDelete)
 
-		//Account Actions
-
-	*/
 
 	r.GET("/health", func(c *gin.Context) {
 
@@ -163,7 +162,7 @@ func (a *Api) LevelUp() {
 		log.Fatal(err)
 	}
 
-	app, err := app.NewApplication(config)
+	app, err := application.NewApplication(config)
 	if err != nil {
 		log.Fatal(err)
 	}
