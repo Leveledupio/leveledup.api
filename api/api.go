@@ -117,7 +117,7 @@ func RouteSetup(a *application.Application) *gin.Engine {
 //
 func newConfig() (*viper.Viper, error) {
 
-	configName := fmt.Sprintf("config/%v-config.yaml", ENV)
+	configName := fmt.Sprint("config/config.yaml")
 
 	pwd, _ := os.Getwd()
 	log.Debugf("Current working dir %s", pwd)
