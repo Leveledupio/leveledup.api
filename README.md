@@ -1,5 +1,7 @@
 # leveledup.api
 
+API for Leveledup.io
+
 API configuration file 
 
 ```yaml
@@ -15,14 +17,15 @@ MYSQL_PWD: "PASSWORD"
 
 You need to mount that config file for docker. The API will panic if it doesnt find the config file. Then will try to connect to database, and also will exit if it can't connect. 
 
+[How to connect to the Database](https://github.com/strongjz/leveledup.api/blob/master/Database.md)
+
+Then run the api in docker
+
 ``` bash
 docker build -t lvl-api:dev-latest . 
 
 docker run -p 8080:8080 -v $PWD/config/dev-config.yaml:/root/config/dev-config.yaml:ro lvl-api:dev-latest
 ```
-
-Api for Leveledup
-
 
 Swagger ui tool for mock testing of the API
 

@@ -1,5 +1,5 @@
 
-1. INstall an opneVPN client 
+1. Install an OpenVPN client 
 
     https://www.sparklabs.com/viscosity/
 
@@ -7,7 +7,7 @@
 
 2. Connect to environment vpn 
 
-    ENV.vpn.leveledup.io
+    vpn.ENV.leveledup.io
 
     You may need to log into the AWS account and update the sec group to open 443 to your ip, 1194 should be open to all.
     
