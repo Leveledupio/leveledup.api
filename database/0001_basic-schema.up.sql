@@ -1,6 +1,6 @@
 #SET SESSION time_zone = "+0:00";
 
-use gbs;
+use leveledup;
 
 DROP TABLE IF EXISTS project_team;
 DROP TABLE IF EXISTS project;

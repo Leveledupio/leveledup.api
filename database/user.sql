@@ -1,4 +1,4 @@
-use gbs;
+use leveledup;
 
 INSERT INTO `user` (`user_id`,`first_name`,`last_name`,`github_name`,`slack_name`,`date_became_customer`,`email`) VALUES (100,"Heather","Indira","lectus","non","2017-05-18","at@Proinvelnisl.org"),(101,"Flavia","Micah","quam,","Cum","2018-01-21","congue.elit@augue.co.uk"),(102,"Yasir","Idona","egestas,","odio","2018-02-02","non.enim@etnunc.ca"),(103,"Stewart","Karly","Nunc","lacus.","2017-11-09","auctor.nunc.nulla@tellusSuspendisse.edu"),(104,"Blythe","Mollie","purus","sapien,","2016-09-11","Aenean@dapibusid.com"),(105,"Octavius","Harlan","nulla.","Quisque","2017-10-24","fames@tellus.net"),(106,"Finn","Moses","nunc.","ante","2018-02-22","est.ac@eu.co.uk"),(107,"Kai","Dane","vehicula","libero","2017-10-14","torquent.per@eleifend.org"),(108,"Armand","Jesse","aliquet,","dolor","2017-03-07","a@parturientmontes.org"),(109,"Griffith","Risa","odio.","elit","2017-04-20","Donec.nibh.Quisque@tortorIntegeraliquam.edu");
 /*
