@@ -24,7 +24,7 @@ Then run the api in docker
 ``` bash
 docker build -t lvl-api:dev-latest . 
 
-docker run -p 8080:8080 -v $PWD/config/dev-config.yaml:/root/config/dev-config.yaml:ro lvl-api:dev-latest
+docker run -p 8080:8080 -v $PWD/config/config.yaml:/root/config/config.yaml:ro lvl-api:dev-latest
 ```
 
 Swagger ui tool for mock testing of the API
