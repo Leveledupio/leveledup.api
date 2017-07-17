@@ -78,9 +78,9 @@ func RouteSetup(a *application.Application) *gin.Engine {
 
 	//Team Actions
 	r.POST("/team", api.TeamCreate)
-	r.GET("/team/:teamID", api.TeamGet)
-	r.PUT("/team/:teamID", api.TeamUpdate)
-	r.DELETE("/team/:teamID", api.TeamDelete)
+	r.GET("/team/:team", api.TeamGet)
+	r.PUT("/team/:team", api.TeamUpdate)
+	r.DELETE("/team/:team", api.TeamDelete)
 
 
 	//Project Actions
