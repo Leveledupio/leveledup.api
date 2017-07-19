@@ -35,8 +35,8 @@ func NewUser(db *sqlx.DB) *User {
 type UserRow struct {
 	UserID        int64  `db:"user_id" json:"user_id,omitempty"`
 	Email         string `db:"email" json:"email,omitempty"`
-	Password      string `db:"password" json:"password,omitempty"`
-	PasswordAgain string `json:"password_again,omitempty"`
+	Password      string `db:"password" json:"-"`
+	PasswordAgain string `json:"password_again"`
 	FirstName     string `db:"first_name" json:"first_name,omitempty"`
 	LastName      string `db:"last_name" json:"last_name,omitempty"`
 	GithubName    string `db:"github_name" json:"github_name,omitempty"`

@@ -84,3 +84,8 @@ func (h *ApiResource) TeamDelete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
 
+func (h *ApiResource) ProjectTeam(c *gin.Context) {
+
+
+}
+

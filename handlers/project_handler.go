@@ -35,7 +35,31 @@ func (h *ApiResource) ProjectCreate(c *gin.Context) {
 
 func (h *ApiResource) ProjectGet(c *gin.Context) {
 	log.Debug("ProjectGet Endpoint")
-	c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	Project := models.NewProject(h.DB)
+
+
+	project := c.Param("project")
+
+	Project.Name = project
+
+	err := c.Bind(&Project.ProjectRow)
+	if err != nil {
+		log.Errorf("Problem decoding JSON body %s", err)
+		c.JSON(400, errors.New("problem decoding body"))
+		return
+	}
+
+	err = Project.GetProjectByName(nil)
+	if err != nil {
+		log.Errorf("Error retrieving Project Name: %s %s", Project.Name, err)
+		error := "Error Project Does not exist"
+
+		c.JSON(400, gin.H{"error": error})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "ok", "project": Project.ProjectRow})
 }
 
 func (h *ApiResource) ProjectUpdate(c *gin.Context) {
@@ -47,3 +71,4 @@ func (h *ApiResource) ProjectDelete(c *gin.Context) {
 	log.Debug("ProjectDelete Endpoint")
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
+

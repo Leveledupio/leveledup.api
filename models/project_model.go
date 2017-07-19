@@ -20,11 +20,29 @@ func NewProject(db *sqlx.DB) *Project {
 }
 
 type ProjectRow struct {
-	ProjectID   int64  `db:"project_id"`
-	Name        string `db:"name"`
-	Description string `db:"description"`
-	Difficulty  int    `db:"difficulty"`
+	ProjectID   int64  `db:"project_id" json:"project_id"`
+	Name        string `db:"name" json:"name"`
+	Description string `db:"description" json:"description"`
+	Difficulty  int    `db:"difficulty" json:"difficulty"`
+
 }
+
+type Sprint struct {
+
+}
+
+type Story struct {
+
+}
+
+type Task struct {
+
+}
+
+type Epic struct {
+
+}
+
 
 type Project struct {
 	Base
@@ -74,6 +92,18 @@ func (p *Project) GetProjectById(tx *sqlx.Tx, id int64) error {
 	ProjectRow := &ProjectRow{}
 	query := fmt.Sprintf("SELECT * FROM %v WHERE %v=?", p.table, p.tableID)
 	err := p.db.Get(ProjectRow, query, id)
+
+	p.ProjectRow = ProjectRow
+
+	return err
+}
+
+
+// GetById returns record by id.
+func (p *Project) GetProjectByName(tx *sqlx.Tx) error {
+	ProjectRow := &ProjectRow{}
+	query := fmt.Sprintf("SELECT * FROM %v WHERE %v=?", p.table, "name")
+	err := p.db.Get(ProjectRow, query, p.Name)
 
 	p.ProjectRow = ProjectRow
 
