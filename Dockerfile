@@ -6,7 +6,15 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o lvl-api .
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
-VOLUME $GOPATH/src/github.com/strongjz/leveledup-api/config
 COPY --from=0 /go/src/github.com/strongjz/leveledup-api/lvl-api .
 
+#ADD repositories /etc/apk/repositoriesa
+RUN apk add --update python python-dev gfortran py-pip build-base
+RUN pip install --upgrade --user awscli
+
+# Install the new entry-point script
+COPY secrets-entrypoint.sh /secrets-entrypoint.sh
+
+# Overwrite the entry-point script
+ENTRYPOINT ["/secrets-entrypoint.sh"]
 CMD ["./lvl-api"]
