@@ -19,5 +19,6 @@ RUN chmod +x ~/.local/bin
 COPY secrets-entrypoint.sh /secrets-entrypoint.sh
 
 # Overwrite the entry-point script
-ENTRYPOINT ["/secrets-entrypoint.sh"]
-CMD ["./lvl-api"]
+ENTRYPOINT [ "/secrets-entrypoint.sh"]
+
+#CMD ["./lvl-api"]

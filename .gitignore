@@ -13,7 +13,7 @@ config/*
 lvl-api
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-projectFilesBackup/*
+projectFilesBackup*/*
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/

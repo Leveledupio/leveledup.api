@@ -8,4 +8,8 @@ fi
 
 mkdir -p config
 # Load the S3 secrets
-~/.local/bin/aws s3 cp s3://${SECRETS_BUCKET_NAME}/config.yaml config/
+
+~/.local/bin/aws s3 cp s3://"${SECRETS_BUCKET_NAME}"/config.yaml config/
+
+
+./lvl-api
