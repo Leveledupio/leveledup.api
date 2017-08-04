@@ -10,9 +10,10 @@ COPY --from=0 /go/src/github.com/strongjz/leveledup-api/lvl-api .
 
 #ADD repositories /etc/apk/repositoriesa
 RUN apk add --update python python-dev gfortran py-pip build-base
+
 RUN pip install --upgrade --user awscli
 RUN export PATH=~/.local/bin:$PATH
-RUN chmod +x ~/.local/bin
+RUN chmod +x ~/.local/bin/aws
 
 
 # Install the new entry-point script
