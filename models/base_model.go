@@ -10,6 +10,7 @@ import (
 
 	"strings"
 	"time"
+	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 var (
@@ -18,6 +19,7 @@ var (
 
 type Base struct {
 	db      *sqlx.DB
+	aws     *session.Session
 	table   string
 	tableID string
 	hasID   bool

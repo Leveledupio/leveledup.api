@@ -8,6 +8,8 @@ import (
 	"gopkg.in/op/go-logging.v1"
 
 	"errors"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 var (
@@ -20,6 +22,7 @@ type Application struct {
 	Config       *viper.Viper
 	DSN          string
 	DB           *sqlx.DB
+	AWS	     *session.Session
 	SessionStore sessions.Store
 }
 
@@ -47,11 +50,15 @@ func NewApplication(config *viper.Viper) (*Application, error) {
 	log.Info("Connected to Database")
 
 	cookieStoreSecret := config.Get("cookie_secret").(string)
-
+	region := config.Get("aws_region").(string)
 	app := &Application{}
 	app.Config = config
 	app.DSN = dsn
 	app.DB = db
+	app.AWS = session.Must(session.NewSessionWithOptions(session.Options{
+		Config: aws.Config{Region: aws.String(region)},
+
+	}))
 	app.SessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
 
 	return app, nil
