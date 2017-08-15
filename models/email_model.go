@@ -7,12 +7,13 @@ import (
 "github.com/aws/aws-sdk-go/service/ses"
 "fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/aws/aws-sdk-go/aws/session"
 )
 
-func NewEmail(db *sqlx.DB, aws *ses) *Email {
+func NewEmail(db *sqlx.DB, awsSession *session.Session) *Email {
 	Email := &Email{}
 	Email.db = db
-	Email.aws = aws
+	Email.awsSession = awsSession
 	return Email
 }
 
@@ -23,7 +24,7 @@ type EmailRow struct {
 	BodyHTML string `db:"bodyhtml" json:"bodyhtml"`
 	BodyText string `db:"bodytext" json:"bodytext"`
 
-	EmailCC[] string `db:"emailcc" json:"emailcc,omitempty"`
+	//EmailCC []*string `db:"emailcc" json:"emailcc,omitempty"`
 
 }
 
@@ -32,14 +33,15 @@ type Email struct {
 	EmailRow
 }
 
-func (e *Email) SendEmail(){
-	svc := ses.New(e.aws)
+func (e *Email) SendEmail() error {
+
+	log.Debugf("Session :v", e.awsSession)
+
+	svc := ses.New(e.awsSession)
 
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
-			CcAddresses: []*string{
-				aws.String(e.EmailCC),
-			},
+
 			ToAddresses: []*string{
 				aws.String(e.EmailTo),
 			},
@@ -70,24 +72,28 @@ func (e *Email) SendEmail(){
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			case ses.ErrCodeMessageRejected:
-				fmt.Println(ses.ErrCodeMessageRejected, aerr.Error())
+				log.Debugf(ses.ErrCodeMessageRejected, aerr.Error())
+
 			case ses.ErrCodeMailFromDomainNotVerifiedException:
-				fmt.Println(ses.ErrCodeMailFromDomainNotVerifiedException, aerr.Error())
+				log.Debugf(ses.ErrCodeMailFromDomainNotVerifiedException, aerr.Error())
 			case ses.ErrCodeConfigurationSetDoesNotExistException:
-				fmt.Println(ses.ErrCodeConfigurationSetDoesNotExistException, aerr.Error())
+				log.Debugf(ses.ErrCodeConfigurationSetDoesNotExistException, aerr.Error())
 			default:
-				fmt.Println(aerr.Error())
+				log.Debugf(aerr.Error())
 			}
 		} else {
 			// Print the error, cast err to awserr.Error to get the Code and
 			// Message from an error.
-			fmt.Println(err.Error())
+			log.Debugf(err.Error())
+
+			return err
 		}
-		return
+		return err
 	}
 
 	fmt.Println(result)
 
+	return nil
 }
 
 

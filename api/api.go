@@ -57,17 +57,17 @@ func ApiMiddleware(db *sqlx.DB) gin.HandlerFunc {
 
 // RouteSetup - Set the http routes for the api
 //
-func RouteSetup(a *application.Application) *gin.Engine {
+func RouteSetup(app *application.Application) *gin.Engine {
 
 	r := gin.Default()
 	r.Use(RequestIDMiddleware())
-	r.Use(ApiMiddleware(a.DB))
+	r.Use(ApiMiddleware(app.DB))
 
 	cors_config := cors.DefaultConfig()
 	cors_config.AllowAllOrigins = true
 	r.Use(cors.New(cors_config))
 
-	api := &handlers.ApiResource{DB: a.DB}
+	api := &handlers.ApiResource{DB: app.DB, AWSSession: app.AWSSession}
 
 	//User Actions
 	r.POST("/user/login", api.UserLogin)
@@ -89,10 +89,13 @@ func RouteSetup(a *application.Application) *gin.Engine {
 	r.PUT("/project/:projectID", api.ProjectUpdate)
 	r.DELETE("/project/:projectID", api.ProjectDelete)
 
+	//Contact Us
+	r.POST("contact", api.Contact)
 
+	//Loadbalancer Health check
 	r.GET("/health", func(c *gin.Context) {
 
-		err := a.DB.Ping()
+		err := app.DB.Ping()
 		if err != nil {
 			e := fmt.Sprintf("Database health ping failed: %v", err)
 			log.Error(e)
@@ -127,7 +130,6 @@ func newConfig() (*viper.Viper, error) {
 	c.SetConfigFile(configName)
 	c.SetConfigType("yaml")
 	c.WatchConfig()
-	c.Debug()
 
 	c.OnConfigChange(func(e fsnotify.Event) {
 		log.Infof("Config file changed:", e.Name)
@@ -140,7 +142,6 @@ func newConfig() (*viper.Viper, error) {
 
 	}
 
-	c.Debug()
 
 	return c, nil
 }
@@ -167,14 +168,12 @@ func (a *Api) LevelUp() {
 		log.Fatal(err)
 	}
 
-	log.Debugf("Config: %v", config)
-	log.Debugf("App DSN: %s", app.DSN)
-
 	r := RouteSetup(app)
 
 	port := config.Get("port").(string)
 	if port == "" {
-		log.Fatal("No Port in config file")
+		log.Warning("No Port in config file")
+		port = "8080"
 	}
 
 	address := fmt.Sprintf("0.0.0.0:%s", port)

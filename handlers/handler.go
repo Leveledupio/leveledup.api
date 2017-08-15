@@ -5,6 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/op/go-logging.v1"
 	"os"
+	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 var (
@@ -26,6 +27,7 @@ func init() {
 
 type ApiResource struct {
 	DB *sqlx.DB
+	AWSSession *session.Session
 
 }
 

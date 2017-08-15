@@ -19,7 +19,7 @@ var (
 
 type Base struct {
 	db      *sqlx.DB
-	aws     *session.Session
+	awsSession     *session.Session
 	table   string
 	tableID string
 	hasID   bool

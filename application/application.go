@@ -22,7 +22,7 @@ type Application struct {
 	Config       *viper.Viper
 	DSN          string
 	DB           *sqlx.DB
-	AWS	     *session.Session
+	AWSSession	     *session.Session
 	SessionStore sessions.Store
 }
 
@@ -30,6 +30,7 @@ type Application struct {
 //
 func NewApplication(config *viper.Viper) (*Application, error) {
 	dsn := config.Get("dsn").(string)
+
 	if dsn == "" {
 		log.Errorf("No DSN in config file")
 		return nil, errors.New("No DSN in config file")
@@ -51,14 +52,18 @@ func NewApplication(config *viper.Viper) (*Application, error) {
 
 	cookieStoreSecret := config.Get("cookie_secret").(string)
 	region := config.Get("aws_region").(string)
+
 	app := &Application{}
 	app.Config = config
 	app.DSN = dsn
-	app.DB = db
-	app.AWS = session.Must(session.NewSessionWithOptions(session.Options{
-		Config: aws.Config{Region: aws.String(region)},
 
+	sess := session.Must(session.NewSession(&aws.Config{
+		Region: aws.String(region),
 	}))
+
+	//log.Debugf("Application Session %v", sess)
+	app.AWSSession = sess
+
 	app.SessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
 
 	return app, nil

@@ -12,7 +12,7 @@ import (
 
 var (
 	UserID        = "user_id"
-	Email         = "email"
+	UserEmail         = "email"
 	Password      = "password"
 	PasswordAgain = "password"
 	FirstName     = "first_name"
@@ -193,7 +193,7 @@ func (u *User) Signup(tx *sqlx.Tx) (*UserRow, error) {
 	}
 
 	data := make(map[string]interface{})
-	data[Email] = e.Address
+	data[UserEmail] = e.Address //ParseAddress returns e
 	data[Password] = hashedPassword
 	data[FirstName] = u.FirstName
 	data[LastName] = u.LastName
@@ -215,7 +215,7 @@ func (u *User) UpdateEmailAndPasswordById(tx *sqlx.Tx, userId int64, email, pass
 	data := make(map[string]interface{})
 
 	if email != "" {
-		data[Email] = email
+		data[UserEmail] = email
 	}
 
 	if password != "" && passwordAgain != "" && password == passwordAgain {
@@ -240,7 +240,7 @@ func (u *User) UpdateEmailAndPasswordById(tx *sqlx.Tx, userId int64, email, pass
 func (u *User) UpdateUser(tx *sqlx.Tx) (*UserRow, error) {
 
 	data := make(map[string]interface{})
-	data[Email] = u.Email
+	data[UserEmail] = u.Email
 	data[FirstName] = u.FirstName
 	data[LastName] = u.LastName
 	data[GithubName] = u.GithubName
