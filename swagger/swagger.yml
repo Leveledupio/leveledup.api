@@ -88,6 +88,39 @@ paths:
           description: "Invalid username supplied"
         404:
           description: "User not found"
+  /email:
+   post:
+         tags:
+         - "email"
+         summary: "Send Email"
+         description: "Sends email"
+         operationId: ""
+         produces:
+         - "application/json"
+         parameters:
+         - name: "username"
+           in: "path"
+           description: "The email that needs to be fetched. Use user1 for testing. "
+           required: true
+           type: "string"
+         responses:
+           200:
+             description: "successful operation"
+             schema:
+               $ref: "#/definitions/User"
+             application/json:
+               user_id: 1
+               first_name: "Jeff"
+               last_name: "Black"
+               github_name: "jblack"
+               slack_name: "jblack"
+               date_became_customer: "2017-06-14"
+           400:
+             description: "Invalid username supplied"
+           404:
+             description: "User not found"
+
+
 definitions:
  User:
    type: "object"
@@ -128,4 +161,17 @@ definitions:
     BillingAddress:
      type: "string"
     ShippingAddress:
+     type: "string"
+ Eamil:
+   type: "object"
+   properties:
+    emailto:
+     type: "string"
+    subject:
+     type: "string"
+    emailfrom:
+     type: "string"
+    bodytext:
+     type: "string"
+    bodyhtml:
      type: "string"

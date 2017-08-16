@@ -2,6 +2,9 @@
 
 API for Leveledup.io
 
+[![CircleCI](https://circleci.com/gh/strongjz/leveledup.api.svg?style=svg&circle-token=26f4fcdf1ce73afcc3174098d10b28eda0acfda1)](https://circleci.com/gh/strongjz/leveledup.api)
+
+
 API configuration file 
 
 ```yaml
