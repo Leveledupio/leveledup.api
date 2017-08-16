@@ -16,9 +16,8 @@ jobs:
       - run: bash curl --retry 10 --retry-delay 5 localhost:8080/health | grep "Connected to Database"
       - run: bash .circleci/deploy_dev.sh
       - deploy:
-          dev:
-            branch: master
-            command: .circleci/deploy_dev.sh
+          command: .circleci/deploy_dev.sh
+          name: Deploy Image to ECR
 
 
 
