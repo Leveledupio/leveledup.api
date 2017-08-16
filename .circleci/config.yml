@@ -1,14 +1,13 @@
 version: 2
 jobs:
   build:
-    docker:
-      # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
-      - image: circleci/golang:1.7.5
-
-    working_directory: /go/src/github.com/strongjz/leveledup-api/
+    machine: true
     steps:
       - checkout
-      - setup_remote_docker   # (2)
+      - run:
+          curl -X GET https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz -o go1.7.5.linux-amd64.tar.gz
+          tar -C /usr/local -xzf go1.7.5.linux-amd64.tar.gz
+          export PATH=$PATH:/usr/local/go/bin
       - run: |
           go get -u github.com/kardianos/govendor
           govendor init
