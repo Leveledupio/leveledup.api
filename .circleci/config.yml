@@ -2,11 +2,12 @@ version: 2
 jobs:
   build:
     machine: true
+      working_directory: /go/src/github.com/strongjz/leveledup-api/
     steps:
       - checkout
-      - run: curl -X GET https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz -o go1.7.5.linux-amd64.tar.gz
-      - run: tar -C /usr/local -xzf go1.7.5.linux-amd64.tar.gz
-      - run: export PATH=$PATH:/usr/local/go/bin
+      #- run: curl -X GET https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz -o go1.7.5.linux-amd64.tar.gz
+      #- run: tar -C /usr/local -xzf go1.7.5.linux-amd64.tar.gz
+      #- run: export PATH=$PATH:/usr/local/go/bin
       - run: go get -u github.com/kardianos/govendor
       - run:   govendor init
       - run: govendor get
