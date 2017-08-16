@@ -5,13 +5,13 @@ jobs:
     steps:
       - checkout
       - run:
-          curl -X GET https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz -o go1.7.5.linux-amd64.tar.gz
-          tar -C /usr/local -xzf go1.7.5.linux-amd64.tar.gz
-          export PATH=$PATH:/usr/local/go/bin
+          curl -X GET https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz -o go1.7.5.linux-amd64.tar.gz \
+          tar -C /usr/local -xzf go1.7.5.linux-amd64.tar.gz \
+          export PATH=$PATH:/usr/local/go/bin \
       - run: |
-          go get -u github.com/kardianos/govendor
-          govendor init
-          govendor get
+          go get -u github.com/kardianos/govendor \
+          govendor init \
+          govendor get \
           docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG .
       - run: docker run -d -p 8080:8080 --name $IMAGE_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG ; sleep 10
       - run: curl --retry 10 --retry-delay 5 localhost:8080/health | grep "Connected to Database"
