@@ -1,18 +1,24 @@
-machine:
-  services:
-    - docker
+version: 2
+jobs:
+  build:
+    docker:
+      # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
+      - image: circleci/golang:1.7.5
 
-dependencies:
-  post:
-    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG .
+    working_directory: /go/src/github.com/strongjz/leveledup-api/
+    steps:
+      - checkout
+      - run: go get -u github.com/kardianos/govendor
+      - run: govendor init
+      - run: govendor get
+      - run: docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG .
+      - run: bash docker run -d -p 8080:8080 --name $IMAGE_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG ; sleep 10
+      - run: bash curl --retry 10 --retry-delay 5 localhost:8080/health | grep "Connected to Database"
+      - run: bash .circleci/deploy_dev.sh
+      - deploy:
+          dev:
+            branch: master
+            commands: .circleci/deploy_dev.sh
 
-test:
-  post:
-    - docker run -d -p 8080:8080 --name $IMAGE_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG ; sleep 10
-    - curl --retry 10 --retry-delay 5 localhost:8080/health | grep "Connected to Database"
 
-deployment:
-  dev:
-    branch: master
-    commands:
-      - ./deploy_dev.sh
+
