@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     machine: true
-      working_directory: /go/src/github.com/strongjz/leveledup-api/
+    working_directory: /go/src/github.com/strongjz/leveledup-api/
     steps:
       - checkout
       #- run: curl -X GET https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz -o go1.7.5.linux-amd64.tar.gz
