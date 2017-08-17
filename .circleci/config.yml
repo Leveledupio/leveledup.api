@@ -2,12 +2,11 @@ version: 2
 jobs:
   build:
     machine: true
-    working_directory: $GOPATH/src/github.com/strongjz/leveledup-api/
     steps:
       - checkout
-      - deploy:
+      - run:
+          working_directory: $GOPATH/src/github.com/strongjz/leveledup-api/
           command: make deploy
-          name: Deploy Image to ECR
-
+          
 
 
