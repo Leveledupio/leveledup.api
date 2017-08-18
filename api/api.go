@@ -82,7 +82,6 @@ func RouteSetup(app *application.Application) *gin.Engine {
 	r.PUT("/team/:team", api.TeamUpdate)
 	r.DELETE("/team/:team", api.TeamDelete)
 
-
 	//Project Actions
 	r.POST("/project", api.ProjectCreate)
 	r.GET("/project/:projectID", api.ProjectGet)
@@ -141,7 +140,6 @@ func newConfig() (*viper.Viper, error) {
 		log.Panicf("fatal error config file: %s", err)
 
 	}
-
 
 	return c, nil
 }

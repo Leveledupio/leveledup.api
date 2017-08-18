@@ -8,8 +8,8 @@ import (
 	"gopkg.in/op/go-logging.v1"
 
 	"errors"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 var (
@@ -22,7 +22,7 @@ type Application struct {
 	Config       *viper.Viper
 	DSN          string
 	DB           *sqlx.DB
-	AWSSession	     *session.Session
+	AWSSession   *session.Session
 	SessionStore sessions.Store
 }
 
@@ -56,7 +56,7 @@ func NewApplication(config *viper.Viper) (*Application, error) {
 	app := &Application{}
 	app.Config = config
 	app.DSN = dsn
-
+	app.DB = db
 	sess := session.Must(session.NewSession(&aws.Config{
 		Region: aws.String(region),
 	}))

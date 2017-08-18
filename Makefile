@@ -22,7 +22,7 @@ login:
 
 build:
 	docker build -t $(ECR)/$(PROJECT):$(VERSION) .
-	docker tag $(ECR)/$(PROJECT):$(VERSION) $(ECR)/$(PROJECT)\latest
+	docker tag $(ECR)/$(PROJECT):$(VERSION) $(ECR)/$(PROJECT)\:latest
 
 push:
 	make login

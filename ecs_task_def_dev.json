@@ -1,0 +1,53 @@
+{
+    "networkMode": "bridge",
+    "taskRoleArn": null,
+    "containerDefinitions": [
+        {
+            "volumesFrom": null,
+            "memory": 500,
+            "extraHosts": null,
+            "dnsServers": null,
+            "disableNetworking": null,
+            "dnsSearchDomains": null,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "hostname": null,
+            "essential": true,
+            "entryPoint": null,
+            "mountPoints": null,
+            "name": "leveledup-api",
+            "ulimits": null,
+            "dockerSecurityOptions": null,
+            "environment": [
+                {
+                    "name": "SECRETS_BUCKET_NAME",
+                    "value": "dev-leveledup-api-config"
+                }
+            ],
+            "links": null,
+            "workingDirectory": null,
+            "readonlyRootFilesystem": null,
+            "image": "365769272576.dkr.ecr.us-west-2.amazonaws.com/leveledup-api:latest",
+            "command": null,
+            "user": null,
+            "dockerLabels": null,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "dev-leveledup-api",
+                    "awslogs-region": "us-west-2"
+                }
+            },
+            "cpu": 100,
+            "privileged": null
+        }
+    ],
+    "volumes": [],
+    "family": "leveledup-api-tasl",
+    "placementConstraints": []
+}
