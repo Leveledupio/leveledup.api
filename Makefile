@@ -31,7 +31,7 @@ login:
 	bash login.sh
 	rm login.sh
 
-build:
+build: vendor
 	docker build -t $(ECR)/$(PROJECT):$(VERSION) .
 	docker tag $(ECR)/$(PROJECT):$(VERSION) $(ECR)/$(PROJECT):latest
 
