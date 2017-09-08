@@ -29,6 +29,15 @@ clean:
 	rm -rf build/ vendor/
 	go clean
 
+aws:
+ifndef aws
+	curl -O https://bootstrap.pypa.io/get-pip.py
+	python get-pip.py --user
+	export PATH=~/.local/bin:$PATH
+	pip install awscli --upgrade --user
+	aws --version
+endif
+
 login:
 	aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
 	bash login.sh
