@@ -33,7 +33,7 @@ aws:
 ifndef aws
 	curl -O https://bootstrap.pypa.io/get-pip.py
 	python get-pip.py --user
-	export PATH=~/.local/bin:$PATH
+	export PATH=~/.local/bin:${PATH}
 	pip install awscli --upgrade --user
 	aws --version
 endif
