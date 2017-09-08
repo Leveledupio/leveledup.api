@@ -38,7 +38,7 @@ ifndef aws
 	aws --version
 endif
 
-login:
+login: aws
 	aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
 	bash login.sh
 	rm login.sh
