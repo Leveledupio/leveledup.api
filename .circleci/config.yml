@@ -1,16 +1,12 @@
 version: 2
 jobs:
   build:
-    machine: true
-    working_directory: $GOPATH/src/github.com/strongjz/leveledup-api/
+    docker:
+      # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
+      - image: circleci/golang:1.7.5
+    working_directory: /go/src/github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
     steps:
       - checkout
       - run:
-          working_directory: $GOPATH/src/github.com/strongjz/leveledup-api
-          command: ls -la
-      - run:
-          working_directory: $GOPATH/src/github.com/strongjz/leveledup-api
-          command: cat Makefile
-      - run:
-          working_directory: $GOPATH/src/github.com/strongjz/leveledup-api
+          working_directory: /go/src/github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
           command: make deploy
