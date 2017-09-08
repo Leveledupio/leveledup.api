@@ -5,7 +5,7 @@ import (
 
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/strongjz/leveledup-api/models"
+	"github.com/strongjz/leveledup.api/models"
 	"net/http"
 )
 

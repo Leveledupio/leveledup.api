@@ -1,12 +1,12 @@
 FROM golang:1.7.5
-WORKDIR /go/src/github.com/strongjz/leveledup-api/
+WORKDIR /go/src/github.com/strongjz/leveledup.api/
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o lvl-api .
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
-COPY --from=0 /go/src/github.com/strongjz/leveledup-api/lvl-api .
+COPY --from=0 /go/src/github.com/strongjz/leveledup.api/lvl-api .
 
 #ADD repositories /etc/apk/repositoriesa
 RUN apk add --update python python-dev gfortran py-pip build-base

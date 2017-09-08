@@ -4,7 +4,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
-	"github.com/strongjz/leveledup-api/models"
+	"github.com/strongjz/leveledup.api/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 

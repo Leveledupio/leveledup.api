@@ -14,17 +14,7 @@ import:
 - package: github.com/jmoiron/sqlx
 - package: github.com/satori/go.uuid
 - package: github.com/spf13/viper
-- package: github.com/strongjz/leveledup-api
-  subpackages:
-  - api
-  - application
-  - handlers
-  - models
 - package: golang.org/x/crypto
   subpackages:
   - bcrypt
 - package: gopkg.in/op/go-logging.v1
-testImport:
-- package: github.com/strongjz/gbs
-  subpackages:
-  - libstring
