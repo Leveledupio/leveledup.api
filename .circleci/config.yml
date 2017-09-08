@@ -7,12 +7,13 @@ jobs:
     working_directory: /go/src/github.com/strongjz/leveledup.api
     steps:
       - checkout
+      - setup_remote_docker:
+          reusable: true
+          exclusive: true
+          version: 17.06.0-ce
       - run:
-          working_directory: /go/src/github.com/strongjz/leveledup.api
-          command: ls -la
-      - run:
-          working_directory: /go/src/github.com/strongjz/leveledup.api
-          command: cat Makefile
+          name: Dependencies
+          command: apk add --no-cache make git curl openssh      
       - run:
           working_directory: /go/src/github.com/strongjz/leveledup.api
           command: make deploy
