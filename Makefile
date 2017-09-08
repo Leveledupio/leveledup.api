@@ -16,14 +16,17 @@ make = docker run -p $(PORTS) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) 
 
 VERSION := git-$(shell git rev-parse --short HEAD)
 
-all: vendor clean login build push
+all: clean deploy
 
 vendor:
-	go get -u github.com/kardianos/govendor
-	govendor init
-	govendor get
+ifndef glide
+	curl https://glide.sh/get | sh
+endif
+	glide install
+
 
 clean:
+	rm -rf build/ vendor/
 	go clean
 
 login:

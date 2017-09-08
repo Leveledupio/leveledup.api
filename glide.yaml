@@ -1,0 +1,30 @@
+package: github.com/strongjz/leveledup.api
+import:
+- package: github.com/aws/aws-sdk-go
+  subpackages:
+  - aws
+  - aws/awserr
+  - aws/session
+  - service/ses
+- package: github.com/fsnotify/fsnotify
+- package: github.com/gin-contrib/cors
+- package: github.com/gin-gonic/gin
+- package: github.com/go-sql-driver/mysql
+- package: github.com/gorilla/sessions
+- package: github.com/jmoiron/sqlx
+- package: github.com/satori/go.uuid
+- package: github.com/spf13/viper
+- package: github.com/strongjz/leveledup-api
+  subpackages:
+  - api
+  - application
+  - handlers
+  - models
+- package: golang.org/x/crypto
+  subpackages:
+  - bcrypt
+- package: gopkg.in/op/go-logging.v1
+testImport:
+- package: github.com/strongjz/gbs
+  subpackages:
+  - libstring
