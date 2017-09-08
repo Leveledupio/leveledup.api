@@ -9,4 +9,10 @@ jobs:
       - checkout
       - run:
           working_directory: /go/src/github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+          command: ls -la
+      - run:
+          working_directory: /go/src/github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+          command: cat Makefile
+      - run:
+          working_directory: /go/src/github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
           command: make deploy
