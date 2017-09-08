@@ -41,9 +41,6 @@ push: login
 
 deploy: build push
 
-local:
-    docker run -p $(PORTS) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) -e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e SECRETS_BUCKET_NAME=$(CONFIG_BUCKET) $(ECR)/$(PROJECT):latest &
-
 image:
 ifeq ($(CIRCLECI), true)
 	docker build --rm=false -t ${CIRCLE_PROJECT_REPONAME}:$(VERSION).${CIRCLE_BUILD_NUM} .
