@@ -6,12 +6,7 @@ jobs:
     steps:
       - checkout
       - run:
-          working_directory: $GOPATH/src/github.com/strongjz/leveledup-api/
           command: |
-            echo $GOPATH /
-            ls -la $GOPATH/src/github.com/strongjz/leveledup-api/ /
-            ls -la /
-            pwd /
             make deploy
 
 
