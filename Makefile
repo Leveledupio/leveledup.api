@@ -31,6 +31,9 @@ clean:
 
 cli:
 ifndef aws
+ifeq ($(CIRCLECI), true)
+    apk install install python-dev
+endif
 	curl -O https://bootstrap.pypa.io/get-pip.py
 	python get-pip.py --user
 	~/.local/bin/pip install awscli --upgrade
