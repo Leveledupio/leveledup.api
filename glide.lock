@@ -1,5 +1,5 @@
-hash: ac946591c1a3708ae81cea12ab7c296f686b738b86d08695dfca5fc467ba63dd
-updated: 2017-09-07T22:44:34.544038815-04:00
+hash: 2dc5c3d6d029275738030c30e9178a362d1fba94dc3ed8b00e93a07d0f38731d
+updated: 2017-09-11T21:23:41.796857335-04:00
 imports:
 - name: github.com/aws/aws-sdk-go
   version: 4f310cca669fdd58021a326194742bbe61b4da10
@@ -95,13 +95,6 @@ imports:
   version: 7aff26db30c1be810f9de5038ec5ef96ac41fd7c
 - name: github.com/spf13/viper
   version: 25b30aa063fc18e48662b86996252eabdcf2f0c7
-- name: github.com/strongjz/leveledup.api
-  version: 086892db88bf844a112e703c2cd0bf8b110d6316
-  subpackages:
-  - api
-  - application
-  - handlers
-  - models
 - name: github.com/ugorji/go
   version: 8c0409fcbb70099c748d71f714529204975f6c3f
   subpackages:
@@ -126,8 +119,4 @@ imports:
   version: b2cb9fa56473e98db8caba80237377e83fe44db5
 - name: gopkg.in/yaml.v2
   version: eb3733d160e74a9c7e442f435eb3bea458e1d19f
-testImports:
-- name: github.com/strongjz/gbs
-  version: 6ae4eec394a107f8aae5e76179056fb9ea1b6379
-  subpackages:
-  - libstring
+testImports: []

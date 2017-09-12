@@ -26,7 +26,7 @@ endif
 
 
 clean:
-	rm -rf build/ vendor/
+	rm -rf vendor/
 	go clean
 
 cli:
