@@ -29,7 +29,7 @@ clean:
 	rm -rf build/ vendor/
 	go clean
 
-aws:
+cli:
 ifndef aws
 	curl -O https://bootstrap.pypa.io/get-pip.py
 	python get-pip.py --user
@@ -37,7 +37,7 @@ ifndef aws
 	~/.local/bin/aws --version --user
 endif
 
-login: aws
+login: cli
 	~/.local/bin/aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
 	bash login.sh
 	rm login.sh
