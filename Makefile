@@ -32,13 +32,13 @@ clean:
 aws:
 ifndef aws
 	curl -O https://bootstrap.pypa.io/get-pip.py
-	python get-pip.py
-	pip install awscli --upgrade
-	aws --version
+	python get-pip.py --user
+	~/.local/bin/pip install awscli --upgrade
+	~/.local/bin/aws --version --user
 endif
 
 login: aws
-	aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
+	~/.local/bin/aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
 	bash login.sh
 	rm login.sh
 
