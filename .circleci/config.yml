@@ -12,5 +12,10 @@ jobs:
           exclusive: true
           version: 17.06.0-ce
       - run:
+          command: |
+            curl -O https://bootstrap.pypa.io/get-pip.py
+            python get-pip.py --user
+            pip install awscli --upgrade --user
+      - run:
           working_directory: /go/src/github.com/strongjz/leveledup.api
           command: make deploy
