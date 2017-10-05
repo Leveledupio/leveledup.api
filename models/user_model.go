@@ -12,7 +12,7 @@ import (
 
 var (
 	UserID        = "user_id"
-	UserEmail         = "email"
+	UserEmail     = "email"
 	Password      = "password"
 	PasswordAgain = "password"
 	FirstName     = "first_name"

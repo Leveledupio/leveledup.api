@@ -8,6 +8,7 @@ import (
 	"gopkg.in/op/go-logging.v1"
 
 	"errors"
+	jira "github.com/andygrunwald/go-jira"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 )
@@ -24,6 +25,7 @@ type Application struct {
 	DB           *sqlx.DB
 	AWSSession   *session.Session
 	SessionStore sessions.Store
+	JiraClient   *jira.Client
 }
 
 //NewApplication - Creates a new applications and populates information based on the config.
@@ -33,25 +35,45 @@ func NewApplication(config *viper.Viper) (*Application, error) {
 
 	if dsn == "" {
 		log.Errorf("No DSN in config file")
-		return nil, errors.New("No DSN in config file")
+		return nil, errors.New("no DSN in config file")
 	}
+	log.Info("[INFO] Connecting to Database")
 
 	db, err := sqlx.Connect("mysql", dsn)
 	if err != nil {
-		log.Errorf("Connecting to Database: %v", err)
+		log.Errorf("[ERROR] connecting to Database: %v", err)
 		return nil, err
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Errorf("Database ping failed: %v", err)
+		log.Errorf("[ERROR] Database ping failed: %v", err)
 		return nil, err
 	}
 
-	log.Info("Connected to Database")
+	log.Info("[INFO] connected to Database")
 
 	cookieStoreSecret := config.Get("cookie_secret").(string)
 	region := config.Get("aws_region").(string)
+
+	jiraURL := config.Get("jira_url").(string)
+	jiraUSER := config.Get("jira_user").(string)
+	jiraPassword := config.Get("jira_password").(string)
+
+	log.Info("[INFO] Connecting to JIRA ")
+
+	jiraClient, err := jira.NewClient(nil, jiraURL)
+	if err != nil {
+		log.Errorf("[ERROR]Creating Jira client %s ", err)
+		return nil, err
+
+	}
+
+	jiraClient.Authentication.SetBasicAuth(jiraUSER, jiraPassword)
+
+	if jiraClient.Authentication.Authenticated() {
+		log.Debug("[DEBUG] Jira Authenticated")
+	}
 
 	app := &Application{}
 	app.Config = config
@@ -61,10 +83,10 @@ func NewApplication(config *viper.Viper) (*Application, error) {
 		Region: aws.String(region),
 	}))
 
-	//log.Debugf("Application Session %v", sess)
 	app.AWSSession = sess
 
 	app.SessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
+	app.JiraClient = jiraClient
 
 	return app, nil
 }

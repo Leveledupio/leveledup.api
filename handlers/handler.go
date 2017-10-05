@@ -1,17 +1,17 @@
 package handlers
 
 import (
+	"github.com/andygrunwald/go-jira"
+	"github.com/aws/aws-sdk-go/aws/session"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/op/go-logging.v1"
 	"os"
-	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 var (
-	log = logging.MustGetLogger("handlers")
+	log           = logging.MustGetLogger("handlers")
 	defaultFormat = "%{color}%{time:2006-01-02T15:04:05.000Z07:00} %{level:-5s} [%{shortfile}]%{color:reset} %{message}"
-
 )
 
 func init() {
@@ -26,8 +26,7 @@ func init() {
 }
 
 type ApiResource struct {
-	DB *sqlx.DB
+	DB         *sqlx.DB
 	AWSSession *session.Session
-
+	Jira       *jira.Client
 }
-

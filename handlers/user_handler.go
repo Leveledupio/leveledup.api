@@ -4,9 +4,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
-	"github.com/strongjz/leveledup.api/models"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/strongjz/leveledup.api/models"
 )
 
 func (h *ApiResource) UserLogin(c *gin.Context) {

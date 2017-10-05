@@ -4,16 +4,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
-	"github.com/strongjz/leveledup.api/models"
 	"github.com/gin-gonic/gin"
+	"github.com/strongjz/leveledup.api/models"
 	"net/http"
-
 )
 
 func (h *ApiResource) ProjectCreate(c *gin.Context) {
 	log.Debug("ProjectCreate Endpoint")
-	Project := models.NewProject(h.DB)
-
+	Project := models.NewProject(h.DB, h.Jira)
 
 	err := c.Bind(&Project.ProjectRow)
 	if err != nil {
@@ -22,7 +20,7 @@ func (h *ApiResource) ProjectCreate(c *gin.Context) {
 		return
 	}
 
-	err = Project.CreateProject(nil)
+	err = Project.CreateProject()
 	if err != nil {
 		log.Errorf("Error creating Project %s", err)
 		error := "Error creating Project"
@@ -35,8 +33,7 @@ func (h *ApiResource) ProjectCreate(c *gin.Context) {
 
 func (h *ApiResource) ProjectGet(c *gin.Context) {
 	log.Debug("ProjectGet Endpoint")
-	Project := models.NewProject(h.DB)
-
+	Project := models.NewProject(h.DB, h.Jira)
 
 	project := c.Param("project")
 
@@ -71,4 +68,3 @@ func (h *ApiResource) ProjectDelete(c *gin.Context) {
 	log.Debug("ProjectDelete Endpoint")
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
-

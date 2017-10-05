@@ -121,10 +121,6 @@ func newConfig() (*viper.Viper, error) {
 
 	configName := fmt.Sprint("config/config.yaml")
 
-	pwd, _ := os.Getwd()
-	log.Debugf("Current working dir %s", pwd)
-	log.Debugf("Loading Config file %v", configName)
-
 	c := viper.New()
 	c.SetConfigFile(configName)
 	c.SetConfigType("yaml")

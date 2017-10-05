@@ -1,21 +1,25 @@
 package models
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
+	jira "github.com/andygrunwald/go-jira"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
 
-func NewProject(db *sqlx.DB) *Project {
+func NewProject(db *sqlx.DB, jira *jira.Client) *Project {
 	Project := &Project{}
 	Project.ProjectRow = &ProjectRow{}
 	Project.db = db
+	Project.jira = jira
 	Project.table = "project"
 	Project.hasID = true
 	Project.tableID = "project_id"
 	Project.Difficulty = 0
+
 	return Project
 }
 
@@ -24,29 +28,57 @@ type ProjectRow struct {
 	Name        string `db:"name" json:"name"`
 	Description string `db:"description" json:"description"`
 	Difficulty  int    `db:"difficulty" json:"difficulty"`
-
+	Data        []Data `json:"data"`
 }
 
-type Sprint struct {
-
-}
-
-type Story struct {
-
-}
-
-type Task struct {
-
+type Data struct {
+	Epics   []Epic   `json:"epics"`
+	Sprints []Sprint `json:"sprints"`
+	Stories []Story  `json:"stories"`
+	Tasks   []Task   `json:"tasks"`
 }
 
 type Epic struct {
-
+	ProjectID   int64    `json:"projectID"`
+	Sprints     []Sprint `json:"sprints"`
+	Description string   `json:"description"`
+	Name        string   `json:"name"`
 }
 
+type Sprint struct {
+	Epic        Epic
+	Stories     []Story
+	Description string
+	Name        string
+}
+
+type Story struct {
+	Sprint      Sprint
+	Points      int
+	Tasks       []Task
+	Description string
+	Name        string
+}
+
+type Task struct {
+	Story       Story
+	Description string
+	Name        string
+}
 
 type Project struct {
 	Base
 	*ProjectRow
+	jira *jira.Client
+}
+
+func (p *Project) PrintProject() {
+
+	b, err := json.MarshalIndent(p, "", "  ")
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	log.Debugf("Project: %s", string(b))
 }
 
 func (p *Project) ProjectRowFromSqlResult(tx *sqlx.Tx, sqlResult sql.Result) error {
@@ -58,9 +90,7 @@ func (p *Project) ProjectRowFromSqlResult(tx *sqlx.Tx, sqlResult sql.Result) err
 	return p.GetProjectById(tx, ProjectId)
 }
 
-func (p *Project) CreateProject(tx *sqlx.Tx) error {
-
-	data := make(map[string]interface{})
+func (p *Project) CreateProject() error {
 
 	if p.Name == "" {
 		return errors.New("Project Name is invalid.")
@@ -74,17 +104,12 @@ func (p *Project) CreateProject(tx *sqlx.Tx) error {
 		return errors.New("Difficulty is invalid.")
 	}
 
-	data["name"] = p.Name
-	data["description"] = p.Description
-	data["difficulty"] = p.Difficulty
-
-	sqlResult, err := p.InsertIntoTable(tx, data)
-
+	err := p.createproject()
 	if err != nil {
 		return err
 	}
 
-	return p.ProjectRowFromSqlResult(tx, sqlResult)
+	return nil
 }
 
 // GetById returns record by id.
@@ -97,7 +122,6 @@ func (p *Project) GetProjectById(tx *sqlx.Tx, id int64) error {
 
 	return err
 }
-
 
 // GetById returns record by id.
 func (p *Project) GetProjectByName(tx *sqlx.Tx) error {
