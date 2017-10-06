@@ -11,6 +11,9 @@ import (
 
 func (h *ApiResource) ProjectCreate(c *gin.Context) {
 	log.Debug("ProjectCreate Endpoint")
+
+	log.Debug("BASE URL %v", h.Jira.GetBaseURL())
+
 	Project := models.NewProject(h.DB, h.Jira)
 
 	err := c.Bind(&Project.ProjectRow)
@@ -57,6 +60,25 @@ func (h *ApiResource) ProjectGet(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "ok", "project": Project.ProjectRow})
+}
+
+func (h *ApiResource) ProjectGetAll(c *gin.Context) {
+
+	log.Debug("ProjectGetall Endpoint")
+	Project := models.NewProject(h.DB, h.Jira)
+
+	projects, err := Project.GetAllProject()
+	if err != nil {
+		log.Errorf("Error retrieving Project Name: %s %s", Project.Name, err)
+		error := "Error Project Does not exist"
+
+		c.JSON(400, gin.H{"error": error})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "ok", "projects": projects})
+
 }
 
 func (h *ApiResource) ProjectUpdate(c *gin.Context) {

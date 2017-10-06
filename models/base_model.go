@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/op/go-logging.v1"
 
+	jira "github.com/andygrunwald/go-jira"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"strings"
 	"time"
@@ -20,6 +21,7 @@ var (
 type Base struct {
 	db         *sqlx.DB
 	awsSession *session.Session
+	jira       *jira.Client
 	table      string
 	tableID    string
 	hasID      bool

@@ -67,7 +67,7 @@ func RouteSetup(app *application.Application) *gin.Engine {
 	cors_config.AllowAllOrigins = true
 	r.Use(cors.New(cors_config))
 
-	api := &handlers.ApiResource{DB: app.DB, AWSSession: app.AWSSession}
+	api := &handlers.ApiResource{DB: app.DB, AWSSession: app.AWSSession, Jira: app.JiraClient}
 
 	//User Actions
 	r.POST("/user/login", api.UserLogin)
@@ -85,6 +85,7 @@ func RouteSetup(app *application.Application) *gin.Engine {
 	//Project Actions
 	r.POST("/project", api.ProjectCreate)
 	r.GET("/project/:projectID", api.ProjectGet)
+	r.GET("/projects", api.ProjectGetAll)
 	r.PUT("/project/:projectID", api.ProjectUpdate)
 	r.DELETE("/project/:projectID", api.ProjectDelete)
 

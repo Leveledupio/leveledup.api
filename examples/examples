@@ -1,3 +1,13 @@
 
-curl -X POST localhost:8080/project
-
+#Blank project
+curl -X POST \
+  http://localhost:8080/project \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H 'postman-token: 49a03120-a9e4-8db4-b2be-fb788d6c4f0a' \
+  -d '{
+    "name":"Project1",
+    "description":"Project Description",
+    "difficulty": 1
+    
+}'

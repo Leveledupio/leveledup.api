@@ -20,6 +20,8 @@ func NewProject(db *sqlx.DB, jira *jira.Client) *Project {
 	Project.tableID = "project_id"
 	Project.Difficulty = 0
 
+	log.Debugf("[DEBUG] New Project creation Porject Jira URL %v", Project.jira.GetBaseURL())
+
 	return Project
 }
 
@@ -69,7 +71,6 @@ type Task struct {
 type Project struct {
 	Base
 	*ProjectRow
-	jira *jira.Client
 }
 
 func (p *Project) PrintProject() {
@@ -110,6 +111,16 @@ func (p *Project) CreateProject() error {
 	}
 
 	return nil
+}
+
+func (p *Project) GetAllProject() ([]ProjectRow, error) {
+
+	pList, err := p.getAllProjects()
+	if err != nil {
+		return nil, err
+	}
+
+	return pList, nil
 }
 
 // GetById returns record by id.

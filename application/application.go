@@ -64,10 +64,12 @@ func NewApplication(config *viper.Viper) (*Application, error) {
 
 	jiraClient, err := jira.NewClient(nil, jiraURL)
 	if err != nil {
-		log.Errorf("[ERROR]Creating Jira client %s ", err)
+		log.Errorf("[ERROR] Creating Jira client %s ", err)
 		return nil, err
 
 	}
+
+	log.Infof("Jira Base URL %v", jiraClient.GetBaseURL())
 
 	jiraClient.Authentication.SetBasicAuth(jiraUSER, jiraPassword)
 
