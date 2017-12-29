@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	jira "github.com/andygrunwald/go-jira"
+	"strings"
 )
 
 func (p *Project) createproject() error {
@@ -15,23 +16,30 @@ func (p *Project) createproject() error {
 	pro := jira.Project{}
 	pro.Name = p.Name
 	pro.Description = p.Description
+	pro.Key = strings.ToUpper(string(p.Name[0:2]))
+	pro.AssigneeType = "UNASSIGNED"
+
 
 	log.Infof("[INFO] createproject Jira Base URL %v",
 		p.jira.GetBaseURL().Host)
 
-	req, err := p.jira.NewRequest("POST", "/rest/api/2/project", nil)
+	req, err := p.jira.NewRequest("POST", "/rest/api/2/project", pro)
 	if err != nil {
 
 		panic(err)
 
 	}
 
-	log.Debugf("[DEBUG] Request %v", req)
-	_, err = p.jira.Do(req, pro)
+	log.Debugf("[DEBUG] Request Body %v", req.Body)
+	var v interface{}
+
+	_, err = p.jira.Do(req, v)
 	if err != nil {
 		log.Errorf("[ERROR] Creating Project: %v", err)
 		return err
 	}
+
+	log.Debugf("[DEBUG] Jira Request Response Data %v", v)
 
 	defer func() {
 		// recover from panic if one occurred. Set err to nil otherwise.
@@ -60,7 +68,7 @@ func (p *Project) getAllProjects() ([]ProjectRow, error) {
 	pRow := &ProjectRow{}
 
 	for _, project := range *projects {
-		log.Debugf("[DEBUG] %s: %s\n", project.Key, project.Name)
+		log.Debugf("[DEBUG] Key: %s\n Name %s:\n Cat: %s\n Components: %s\n", project.Key, project.Name, project.ProjectCategory, project.Components)
 
 		log.Debugf("[DEBUG]\n %v/n", project)
 

@@ -10,4 +10,7 @@ curl -X POST \
     "description":"Project Description",
     "difficulty": 1
     
-}'
+}' -vvv
+
+#Get all projects
+curl  http://localhost:8080/projects -H 'content-type: application/json'

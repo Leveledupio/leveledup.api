@@ -1,13 +1,14 @@
 package models
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
 	"errors"
 	"fmt"
+	"net/mail"
+
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
-	"net/mail"
 )
 
 var (
@@ -35,7 +36,7 @@ func NewUser(db *sqlx.DB) *User {
 type UserRow struct {
 	UserID        int64  `db:"user_id" json:"user_id,omitempty"`
 	Email         string `db:"email" json:"email,omitempty"`
-	Password      string `db:"password" json:"-"`
+	Password      string `db:"password" json:"password"`
 	PasswordAgain string `json:"password_again"`
 	FirstName     string `db:"first_name" json:"first_name,omitempty"`
 	LastName      string `db:"last_name" json:"last_name,omitempty"`
@@ -120,7 +121,7 @@ func (u *User) GetUserByEmailAndPassword(tx *sqlx.Tx, email, password string) (*
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		log.Debugf("Model GetUserByEmailAndPassword email: %s bcrypt error: %s", email, err)
+		log.Debugf("model GetUserByEmailAndPassword email: %s bcrypt error: %s", email, err)
 		return nil, err
 	}
 
@@ -137,7 +138,7 @@ func (u *User) DeleteUser(tx *sqlx.Tx, email, password string) error {
 
 	user, err := u.GetUserByEmailAndPassword(tx, email, password)
 	if err != nil {
-		log.Debugf("Error retreiving GetUserByEmailAndPassword %s", err)
+		log.Debugf("error retrieving GetUserByEmailAndPassword %s", err)
 		return err
 	}
 	log.Debugf("Model Deleting Retrieving user Email: %s ID: %v", user.Email, user.UserID)

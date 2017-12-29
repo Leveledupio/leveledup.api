@@ -74,6 +74,7 @@ func NewApplication(config *viper.Viper) (*Application, error) {
 	jiraClient.Authentication.SetBasicAuth(jiraUSER, jiraPassword)
 
 	if jiraClient.Authentication.Authenticated() {
+
 		log.Debug("[DEBUG] Jira Authenticated")
 	}
 

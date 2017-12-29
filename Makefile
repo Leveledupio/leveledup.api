@@ -9,7 +9,7 @@ USER := $(notdir $(shell dirname $(CURRENT_DIR)))
 CONTAINER_DIR := /go/src/github.com/$(USER)/$(PROJECT)
 CONTAINER_DIR_CIRCLE := /go/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
 CIRCLECI := ${CIRCLECI}
-PORTS := "80:8080"
+PORTS := "8080:8080"
 
 make = docker run -p $(PORTS) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) -e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e SECRETS_BUCKET_NAME=$(CONFIG_BUCKET) $(ECR)/$(PROJECT):latest &
 .PHONY: default run build
@@ -18,12 +18,13 @@ VERSION := git-$(shell git rev-parse --short HEAD)
 
 all: clean deploy
 
+test: vendor build run
+
 vendor:
 ifndef glide
 	curl https://glide.sh/get | sh
 endif
 	glide install
-
 
 clean:
 	rm -rf vendor/
@@ -31,12 +32,10 @@ clean:
 
 login:
 ifeq ($(CIRCLECI), true)
-	~/.local/bin/aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
+	~/.local/bin/aws ecr get-login --no-include-email --region $(AWS_REGION) | bash
 else
-	aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
+	aws ecr get-login --no-include-email --region $(AWS_REGION) | bash
 endif
-	bash login.sh
-	rm login.sh
 
 build: vendor
 	docker build -t $(ECR)/$(PROJECT):$(VERSION) .
@@ -55,3 +54,6 @@ ifeq ($(CIRCLECI), true)
 else
 	docker build -t $(ECR)/$(PROJECT):latest .
 endif
+
+run:
+	docker run -p $(PORTS) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) -e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e SECRETS_BUCKET_NAME=$(CONFIG_BUCKET) $(ECR)/$(PROJECT):latest

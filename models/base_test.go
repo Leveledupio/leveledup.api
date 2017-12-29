@@ -14,6 +14,7 @@ func newEmailForTest() string {
 func randomIntforTest() string {
 	return fmt.Sprintf(libstring.RandString(32))
 }
+
 func newDbForTest(t *testing.T) *sqlx.DB {
 	/*
 		configName := os.Getenv("ENV") + "-config.yaml"
@@ -141,7 +142,6 @@ func TestCreateDeleteById(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Deleting user by id should not fail. Error: %v", err)
 	}
-
 
 }
 

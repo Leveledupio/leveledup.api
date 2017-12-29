@@ -59,7 +59,7 @@ func (h *ApiResource) UserUpdate(c *gin.Context) {
 	u, err := user.GetByEmail(nil, email)
 	if err != nil {
 
-		c.JSON(400, errors.New("Email not found"))
+		c.JSON(400, errors.New("email not found"))
 		return
 	}
 
@@ -85,15 +85,22 @@ func (h *ApiResource) UserRetrieve(c *gin.Context) {
 
 	err := c.Bind(&user.UserRow)
 	if err != nil {
-		//	log.Errorf("Problem decoding JSON body %s", err)
-		c.JSON(400, errors.New("problem decoding body"))
+		log.Errorf("Problem decoding JSON body %s", err)
+		c.JSON(400, errors.New("problem reading request body, Please try request again later"))
 		return
 	}
 
 	u, err := user.GetByEmail(nil, email)
 	if err != nil {
+		log.Errorf("Get by email error %s", err)
 
-		c.JSON(400, errors.New("Email not found"))
+		if err.Error() == "sql: no rows in result set" {
+			c.JSON(http.StatusOK, gin.H{"status": "Email not found"})
+			return
+
+		}
+
+		c.JSON(http.StatusBadRequest, gin.H{"status": "Please try request again later"})
 		return
 	}
 
@@ -105,10 +112,9 @@ func (h *ApiResource) UserRetrieve(c *gin.Context) {
 }
 
 func (h *ApiResource) UserDelete(c *gin.Context) {
-	log.Debugf("Handler UserSignup")
+	log.Debugf("Handler UserDelete")
 
 	user := models.NewUser(h.DB)
-
 
 	err := c.Bind(&user.UserRow)
 
@@ -127,11 +133,17 @@ func (h *ApiResource) UserDelete(c *gin.Context) {
 		log.Errorf("Error deleting user %s err %s", user.Email, err)
 
 		if err.Error() == "sql: no rows in result set" {
-			c.JSON(404, errors.New("User does not exist"))
+			c.JSON(404, errors.New("user does not exist"))
 			return
 		}
 
-		c.JSON(400, errors.New("Deleting user email"))
+		if err.Error() == "crypto/bcrypt: hashedPassword is not the hash of the given password" {
+
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Username and Password did not match"})
+			return
+		}
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Error deleting user please try again later"})
 		return
 	}
 
@@ -158,8 +170,8 @@ func (h *ApiResource) UserSignup(c *gin.Context) {
 
 	if err != nil {
 
-		log.Debugf("Erroring signing up ERROR %s", err)
-		c.JSON(400, errors.New("Error Signing up user"))
+		log.Debugf("error signing up ERROR %s", err)
+		c.JSON(400, errors.New("error Signing up user"))
 		return
 	}
 
