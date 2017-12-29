@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/mail"
+	"reflect"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -36,8 +37,8 @@ func NewUser(db *sqlx.DB) *User {
 type UserRow struct {
 	UserID        int64  `db:"user_id" json:"user_id,omitempty"`
 	Email         string `db:"email" json:"email,omitempty"`
-	Password      string `db:"password" json:"password"`
-	PasswordAgain string `json:"password_again"`
+	Password      string `db:"password" json:"password,omitempty"`
+	PasswordAgain string `json:"password_again,omitempty"`
 	FirstName     string `db:"first_name" json:"first_name,omitempty"`
 	LastName      string `db:"last_name" json:"last_name,omitempty"`
 	GithubName    string `db:"github_name" json:"github_name,omitempty"`
@@ -98,13 +99,17 @@ func (u *User) GetUserById(tx *sqlx.Tx, id int64) (*UserRow, error) {
 
 // GetByEmail returns record by email.
 func (u *User) GetByEmail(tx *sqlx.Tx, email string) (*UserRow, error) {
+
+	log.Debugf("Model GetByEmail Email: %s", email)
 	user := &UserRow{}
 	query := fmt.Sprintf("SELECT * FROM %v WHERE email=?", u.table)
 	err := u.db.Get(user, query, email)
 	if err != nil {
+		log.Debugf("error returned by GetByEmail: %s", err)
 		return nil, err
 	}
 
+	log.Debugf("Model GetByEmail Email: %s USERID: %d", user.Email, user.UserID)
 	return user, err
 }
 
@@ -114,6 +119,7 @@ func (u *User) GetUserByEmailAndPassword(tx *sqlx.Tx, email, password string) (*
 	log.Debugf("Model GetUserByEmailAndPassword Email: %s", email)
 	user, err := u.GetByEmail(tx, email)
 	if err != nil {
+		log.Debugf("error returned by GetByEmail: %s", err)
 		return nil, err
 	}
 
@@ -238,19 +244,58 @@ func (u *User) UpdateEmailAndPasswordById(tx *sqlx.Tx, userId int64, email, pass
 	return u.GetUserById(tx, userId)
 }
 
-func (u *User) UpdateUser(tx *sqlx.Tx) (*UserRow, error) {
+//UpdateUser - iterating thru the struct and comparing, only updating diffs
+//https://stackoverflow.com/questions/23350173/how-do-you-loop-through-the-fields-in-a-golang-struct-to-get-and-set-values-in-a
+func (u *User) UpdateUser(oldUser *UserRow, tx *sqlx.Tx) (*UserRow, error) {
 
 	data := make(map[string]interface{})
-	data[UserEmail] = u.Email
-	data[FirstName] = u.FirstName
-	data[LastName] = u.LastName
-	data[GithubName] = u.GithubName
-	data[SlackName] = u.SlackName
 
-	sqlResult, err := u.InsertIntoTable(tx, data)
+	old := oldUser    //what is
+	new := &u.UserRow //what will be
+
+	s := reflect.ValueOf(old).Elem()
+	s2 := reflect.ValueOf(new).Elem()
+
+	typeOfT := s.Type()
+	fmt.Println("t=", old)
+	fmt.Println("t2=", new)
+
+	for i := 0; i < s.NumField(); i++ {
+		old := s.Field(i)
+		new := s2.Field(i)
+
+		fmt.Printf("OLD %d: %s %s = %v\n", i, typeOfT.Field(i).Name, old.Type(), old.Interface())
+		fmt.Printf("NEW %d: %s %s = %v\n", i, typeOfT.Field(i).Name, new.Type(), new.Interface())
+
+		if typeOfT.Field(i).Name == "UserID" { //users cant change the id so continue
+			continue
+		}
+
+		if new.Interface() == "" {
+			continue
+		}
+
+		if old.Interface() != new.Interface() {
+			fmt.Printf("change old to new\n")
+			old.Set(reflect.Value(new))
+		}
+
+		fmt.Printf("F2 %d: %s %s = %v\n", i, typeOfT.Field(i).Name, new.Type(), new.Interface())
+
+	}
+	fmt.Println("OLD ", old)
+	fmt.Println("NEW ", new)
+
+	data[UserEmail] = old.Email
+	data[FirstName] = old.FirstName
+	data[LastName] = old.LastName
+	data[GithubName] = old.GithubName
+	data[SlackName] = old.SlackName
+
+	sqlResult, err := u.UpdateByID(tx, data, oldUser.UserID)
 	if err != nil {
 		return nil, err
 	}
-
+	u.UserRow = *old
 	return u.userRowFromSqlResult(tx, sqlResult)
 }

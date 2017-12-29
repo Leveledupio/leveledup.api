@@ -47,29 +47,29 @@ func (h *ApiResource) UserUpdate(c *gin.Context) {
 
 	user := models.NewUser(h.DB)
 
-	email := c.Param("email")
+	//	email := c.Param("email")
 
 	err := c.Bind(&user.UserRow)
 	if err != nil {
 		log.Errorf("Problem decoding JSON body %s", err)
-		c.JSON(400, errors.New("problem decoding body"))
+		c.JSON(400, gin.H{"error": "problem decoding body"})
 		return
 	}
 
-	u, err := user.GetByEmail(nil, email)
+	u, err := user.GetByEmail(nil, user.Email)
 	if err != nil {
 
-		c.JSON(400, errors.New("email not found"))
+		c.JSON(400, gin.H{"error": "email not found"})
 		return
 	}
-
-	u, err = user.UpdateUser(nil)
-
-	log.Debugf("User Row: %v", u)
 
 	//zero out the password
 	u.Password = ""
 	u.PasswordAgain = ""
+
+	u, err = user.UpdateUser(u, nil)
+
+	log.Debugf("User Row: %v", u)
 
 	c.JSON(http.StatusOK, u)
 
