@@ -36,8 +36,8 @@ ifeq ($(CIRCLECI), true)
 else
 	aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
 endif
-    bash login.sh
-    rm login.sh
+	bash login.sh
+	rm login.sh
 
 build: vendor
 	docker build -t $(ECR)/$(PROJECT):$(VERSION) .
