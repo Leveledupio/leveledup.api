@@ -32,10 +32,12 @@ clean:
 
 login:
 ifeq ($(CIRCLECI), true)
-	~/.local/bin/aws ecr get-login --no-include-email --region $(AWS_REGION) | bash
+	~/.local/bin/aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
 else
-	aws ecr get-login --no-include-email --region $(AWS_REGION) | bash
+	aws ecr get-login --no-include-email --region $(AWS_REGION) > login.sh
 endif
+    bash login.sh
+    rm login.sh
 
 build: vendor
 	docker build -t $(ECR)/$(PROJECT):$(VERSION) .
