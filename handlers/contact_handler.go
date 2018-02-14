@@ -1,15 +1,18 @@
 package handlers
 
 import (
+	//Mysql import
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/strongjz/leveledup.api/models"
 	"net/http"
+
+	"github.com/Leveledupio/leveledup.api/models"
+	"github.com/gin-gonic/gin"
 )
 
-func (h *ApiResource) Contact(c *gin.Context) {
+//Contact - Create a new contact
+func (h *APIResource) Contact(c *gin.Context) {
 
 	log.Debugf("Contact Handler")
 

@@ -1,16 +1,18 @@
 package handlers
 
 import (
+	//Mysql blank import required
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
 	"net/http"
 
+	"github.com/Leveledupio/leveledup.api/models"
 	"github.com/gin-gonic/gin"
-	"github.com/strongjz/leveledup.api/models"
 )
 
-func (h *ApiResource) UserLogin(c *gin.Context) {
+//UserLogin - Log in a user
+func (h *APIResource) UserLogin(c *gin.Context) {
 
 	log.Debugf("Handler Login")
 
@@ -41,7 +43,8 @@ func (h *ApiResource) UserLogin(c *gin.Context) {
 	c.JSON(http.StatusOK, u)
 }
 
-func (h *ApiResource) UserUpdate(c *gin.Context) {
+//UserUpdate - API endpoint to update a User
+func (h *APIResource) UserUpdate(c *gin.Context) {
 
 	log.Debugf("Handler UserUpdate")
 
@@ -75,7 +78,8 @@ func (h *ApiResource) UserUpdate(c *gin.Context) {
 
 }
 
-func (h *ApiResource) UserRetrieve(c *gin.Context) {
+//UserRetrieve - API endpoint to get a user
+func (h *APIResource) UserRetrieve(c *gin.Context) {
 
 	log.Debugf("Handler UserRetrieve")
 
@@ -111,7 +115,8 @@ func (h *ApiResource) UserRetrieve(c *gin.Context) {
 	c.JSON(http.StatusOK, u)
 }
 
-func (h *ApiResource) UserDelete(c *gin.Context) {
+//UserDelete - API endpoint to delete a user
+func (h *APIResource) UserDelete(c *gin.Context) {
 	log.Debugf("Handler UserDelete")
 
 	user := models.NewUser(h.DB)
@@ -150,7 +155,8 @@ func (h *ApiResource) UserDelete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
 
-func (h *ApiResource) UserSignup(c *gin.Context) {
+//UserSignup - API endpoint to create a new user
+func (h *APIResource) UserSignup(c *gin.Context) {
 
 	log.Debugf("Handler UserSignup")
 

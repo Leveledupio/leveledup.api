@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"os"
+
 	"github.com/andygrunwald/go-jira"
 	"github.com/aws/aws-sdk-go/aws/session"
+	//Mysql setup requres a blank import
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/op/go-logging.v1"
-	"os"
 )
 
 var (
@@ -25,7 +27,8 @@ func init() {
 	log.Infof("Logging Backend initailzated ")
 }
 
-type ApiResource struct {
+//APIResource  Struct for the API
+type APIResource struct {
 	DB         *sqlx.DB
 	AWSSession *session.Session
 	Jira       *jira.Client

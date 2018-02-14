@@ -1,15 +1,18 @@
 package handlers
 
 import (
+	//Mysql reqiures a blank import
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/strongjz/leveledup.api/models"
 	"net/http"
+
+	"github.com/Leveledupio/leveledup.api/models"
+	"github.com/gin-gonic/gin"
 )
 
-func (h *ApiResource) ProjectCreate(c *gin.Context) {
+//ProjectCreate - Creates projects
+func (h *APIResource) ProjectCreate(c *gin.Context) {
 	log.Debug("ProjectCreate Endpoint")
 
 	log.Debug("BASE URL %v", h.Jira.GetBaseURL())
@@ -34,7 +37,8 @@ func (h *ApiResource) ProjectCreate(c *gin.Context) {
 	c.JSON(http.StatusOK, Project.ProjectRow)
 }
 
-func (h *ApiResource) ProjectGet(c *gin.Context) {
+//ProjectGet API endpoint to get a project
+func (h *APIResource) ProjectGet(c *gin.Context) {
 	log.Debug("ProjectGet Endpoint")
 	Project := models.NewProject(h.DB, h.Jira)
 
@@ -62,7 +66,8 @@ func (h *ApiResource) ProjectGet(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "ok", "project": Project.ProjectRow})
 }
 
-func (h *ApiResource) ProjectGetAll(c *gin.Context) {
+//ProjectGetAll - API endpoint to get all projects
+func (h *APIResource) ProjectGetAll(c *gin.Context) {
 
 	log.Debug("ProjectGetall Endpoint")
 	Project := models.NewProject(h.DB, h.Jira)
@@ -81,12 +86,14 @@ func (h *ApiResource) ProjectGetAll(c *gin.Context) {
 
 }
 
-func (h *ApiResource) ProjectUpdate(c *gin.Context) {
+//ProjectUpdate - API endpoint to update a project
+func (h *APIResource) ProjectUpdate(c *gin.Context) {
 	log.Debug("ProjectUpdate Endpoint")
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
 
-func (h *ApiResource) ProjectDelete(c *gin.Context) {
+//ProjectDelete - API endpoint to delete a project
+func (h *APIResource) ProjectDelete(c *gin.Context) {
 	log.Debug("ProjectDelete Endpoint")
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }

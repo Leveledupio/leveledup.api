@@ -8,8 +8,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/satori/go.uuid"
 	"github.com/spf13/viper"
-	"github.com/strongjz/leveledup.api/application"
-	"github.com/strongjz/leveledup.api/handlers"
+	"github.com/Leveledupio/leveledup.api/application"
+	"github.com/Leveledupio/leveledup.api/handlers"
 	"gopkg.in/op/go-logging.v1"
 	"os"
 )

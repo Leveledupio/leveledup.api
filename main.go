@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/strongjz/leveledup.api/api"
+	"github.com/Leveledupio/leveledup.api/api"
 )
 
 func main() {

@@ -1,20 +1,20 @@
 package handlers
 
 import (
+	//Mysql requires a blank import
 	_ "github.com/go-sql-driver/mysql"
 
 	"errors"
-	"github.com/strongjz/leveledup.api/models"
-	"github.com/gin-gonic/gin"
 	"net/http"
 
+	"github.com/Leveledupio/leveledup.api/models"
+	"github.com/gin-gonic/gin"
 )
 
-
-func (h *ApiResource) TeamCreate(c *gin.Context) {
+//TeamCreate - API endpoint to create a team
+func (h *APIResource) TeamCreate(c *gin.Context) {
 	log.Debug("TeamCreate Endpoint")
 	team := models.NewTeam(h.DB)
-
 
 	err := c.Bind(&team.TeamRow)
 	if err != nil {
@@ -31,12 +31,13 @@ func (h *ApiResource) TeamCreate(c *gin.Context) {
 		return
 	}
 
-	log.Debugf("Name %s ID %v Created by %v , Description %v",t.Name, t.ID, t.CreatedBy, t.Description)
+	log.Debugf("Name %s ID %v Created by %v , Description %v", t.Name, t.ID, t.CreatedBy, t.Description)
 
 	c.JSON(http.StatusOK, t)
 }
 
-func (h *ApiResource) TeamGet(c *gin.Context) {
+//TeamGet - API endpoint to create a new team
+func (h *APIResource) TeamGet(c *gin.Context) {
 	log.Debug("TeamGet Endpoint")
 
 	team := models.NewTeam(h.DB)
@@ -51,16 +52,17 @@ func (h *ApiResource) TeamGet(c *gin.Context) {
 		return
 	}
 
-
 	c.JSON(http.StatusOK, gin.H{"status": "ok", "team": t})
 }
 
-func (h *ApiResource) TeamUpdate(c *gin.Context) {
+//TeamUpdate - API endpoint to update a team
+func (h *APIResource) TeamUpdate(c *gin.Context) {
 	log.Debug("TeamUpdate Endpoint")
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
 
-func (h *ApiResource) TeamDelete(c *gin.Context) {
+//TeamDelete - API endpoint to delete a team
+func (h *APIResource) TeamDelete(c *gin.Context) {
 	log.Debug("TeamDelete Endpoint")
 	team := models.NewTeam(h.DB)
 
@@ -84,8 +86,7 @@ func (h *ApiResource) TeamDelete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
 
-func (h *ApiResource) ProjectTeam(c *gin.Context) {
-
+//ProjectTeam - API endpoint to tie a project to a team
+func (h *APIResource) ProjectTeam(c *gin.Context) {
 
 }
-
